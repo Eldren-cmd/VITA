@@ -5,7 +5,7 @@ import {
   SECONDARY_BUTTON_CLASS,
 } from '@/constants/design'
 
-export default function EnforceCallStep({ node, onAdvance }) {
+export default function EnforceCallStep({ node, onAdvance, practiceMode = false }) {
   return (
     <section className="flex flex-1 flex-col justify-between gap-8">
       <div className="space-y-4">
@@ -38,6 +38,16 @@ export default function EnforceCallStep({ node, onAdvance }) {
             </button>
           )
         )}
+
+        {practiceMode && node.skippable ? (
+          <button
+            type="button"
+            className={SECONDARY_BUTTON_CLASS}
+            onClick={() => onAdvance((node.options || []).length)}
+          >
+            Skip call practice
+          </button>
+        ) : null}
       </div>
     </section>
   )

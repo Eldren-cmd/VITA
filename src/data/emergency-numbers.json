@@ -1,0 +1,137 @@
+{
+  "NG": {
+    "country": "Nigeria",
+    "numbers": [
+      {
+        "label": "National emergency",
+        "number": "112",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "LASEMA Lagos",
+        "number": "767",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "LASHMA Lagos",
+        "number": "0800 000 5274",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "LUTH Lagos",
+        "number": "01-7745853",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "UCH Ibadan",
+        "number": "02-2413701",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "Road accidents",
+        "number": "122",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "Nigerian Red Cross",
+        "number": "+234 803 123 0430",
+        "lastVerified": "2026-03-20"
+      }
+    ]
+  },
+  "US": {
+    "country": "United States",
+    "numbers": [
+      {
+        "label": "Emergency",
+        "number": "911",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "Poison control",
+        "number": "1-800-222-1222",
+        "lastVerified": "2026-03-20"
+      }
+    ]
+  },
+  "GB": {
+    "country": "United Kingdom",
+    "numbers": [
+      {
+        "label": "Emergency",
+        "number": "999",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "Poison or medical",
+        "number": "111",
+        "lastVerified": "2026-03-20"
+      }
+    ]
+  },
+  "EU": {
+    "country": "European Union",
+    "numbers": [
+      {
+        "label": "Emergency",
+        "number": "112",
+        "lastVerified": "2026-03-20"
+      }
+    ]
+  },
+  "GH": {
+    "country": "Ghana",
+    "numbers": [
+      {
+        "label": "Police",
+        "number": "191",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "Ambulance",
+        "number": "193",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "Fire",
+        "number": "192",
+        "lastVerified": "2026-03-20"
+      }
+    ]
+  },
+  "KE": {
+    "country": "Kenya",
+    "numbers": [
+      {
+        "label": "Emergency",
+        "number": "999",
+        "lastVerified": "2026-03-20"
+      }
+    ]
+  },
+  "ZA": {
+    "country": "South Africa",
+    "numbers": [
+      {
+        "label": "Ambulance",
+        "number": "10177",
+        "lastVerified": "2026-03-20"
+      },
+      {
+        "label": "Police",
+        "number": "10111",
+        "lastVerified": "2026-03-20"
+      }
+    ]
+  },
+  "UNKNOWN": {
+    "country": "Unknown",
+    "numbers": [
+      {
+        "label": "Guidance",
+        "number": "Try 112 - works in many countries. Search 'emergency number [your country]' to verify.",
+        "lastVerified": "2026-03-20"
+      }
+    ]
+  }
+}

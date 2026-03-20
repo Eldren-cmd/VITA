@@ -1,12 +1,14 @@
 import type { AppProps } from 'next/app'
 import type { CSSProperties } from 'react'
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
 import { DM_Serif_Display, IBM_Plex_Mono } from 'next/font/google'
 import { useRouter } from 'next/router'
 
 import { DESIGN_CSS_VARIABLES } from '@/constants/design'
 import VaultEngine from '@/engine/VaultEngine'
 import DisclaimerModal from '@/components/onboarding/DisclaimerModal'
+import useVersionCheck from '@/hooks/useVersionCheck'
 import '@/styles/globals.css'
 
 const serif = DM_Serif_Display({
@@ -25,6 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean | null>(null)
   const isAppRoute = router.pathname.startsWith('/app')
+  useVersionCheck()
 
   useEffect(() => {
     if (!isAppRoute || typeof window === 'undefined') {
@@ -34,6 +37,14 @@ export default function App({ Component, pageProps }: AppProps) {
 
     setDisclaimerAccepted(Boolean(window.localStorage.getItem('vita_disclaimer_accepted')))
   }, [isAppRoute, router.asPath])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
+      return
+    }
+
+    navigator.serviceWorker.register('/service-worker.js').catch(() => {})
+  }, [])
 
   const handleAcceptDisclaimer = () => {
     if (typeof window === 'undefined') {
@@ -53,6 +64,10 @@ export default function App({ Component, pageProps }: AppProps) {
         className={`${serif.variable} ${mono.variable} min-h-screen`}
         style={DESIGN_CSS_VARIABLES as CSSProperties}
       >
+        <Head>
+          <meta name="theme-color" content="#C41E3A" />
+          <link rel="manifest" href="/manifest.json" />
+        </Head>
         <DisclaimerModal onAccept={handleAcceptDisclaimer} />
       </main>
     )
@@ -67,6 +82,10 @@ export default function App({ Component, pageProps }: AppProps) {
       className={`${serif.variable} ${mono.variable} min-h-screen`}
       style={DESIGN_CSS_VARIABLES as CSSProperties}
     >
+      <Head>
+        <meta name="theme-color" content="#C41E3A" />
+        <link rel="manifest" href="/manifest.json" />
+      </Head>
       <Component {...pageProps} />
     </main>
   )

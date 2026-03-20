@@ -11,6 +11,7 @@ export default function useVITA(protocolId, language, options = {}) {
   const [resumed, setResumed] = useState(false)
   const [showResumeBanner, setShowResumeBanner] = useState(false)
   const [showDeferredCallAlert, setShowDeferredCallAlert] = useState(false)
+  const [backCount, setBackCount] = useState(0)
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function useVITA(protocolId, language, options = {}) {
     engine.onDeferredCall = () => setShowDeferredCallAlert(true)
     engineRef.current = engine
     setError(null)
+    setBackCount(0)
     setCurrentNode(engine.getCurrentNode())
     setSeverity(engine.currentSeverity || protocol.priority || 'medium')
     setResumed(Boolean(engine.resumed))
@@ -88,7 +90,13 @@ export default function useVITA(protocolId, language, options = {}) {
       return null
     }
 
-    return syncNodeState(engineRef.current.goBack())
+    const previousNode = engineRef.current.goBack()
+
+    if (previousNode) {
+      setBackCount((current) => current + 1)
+    }
+
+    return syncNodeState(previousNode)
   }
 
   const terminate = () => {
@@ -107,6 +115,7 @@ export default function useVITA(protocolId, language, options = {}) {
     getReport,
     terminate,
     resumed,
+    backCount,
     showDeferredCallAlert,
     showResumeBanner,
     dismissDeferredCallAlert: () => setShowDeferredCallAlert(false),

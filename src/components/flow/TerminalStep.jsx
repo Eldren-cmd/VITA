@@ -5,10 +5,47 @@ import { FLOW_BODY_CLASS, FLOW_HEADLINE_CLASS, PRIMARY_BUTTON_CLASS, SECONDARY_B
 import ReportEngine from '@/engine/ReportEngine'
 import VaultEngine from '@/engine/VaultEngine'
 
-export default function TerminalStep({ node, getReport, onTerminate }) {
+function formatDuration(seconds) {
+  if (!seconds || seconds < 60) {
+    return `${seconds || 0}s`
+  }
+
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
+
+  if (remainingSeconds === 0) {
+    return `${minutes}m`
+  }
+
+  return `${minutes}m ${remainingSeconds}s`
+}
+
+function buildPracticeSummary(session, backCount) {
+  const history = Array.isArray(session?.history) ? session.history : []
+  const durationMilliseconds =
+    typeof session?.endTime === 'number' && typeof session?.startTime === 'number'
+      ? Math.max(0, session.endTime - session.startTime)
+      : Math.max(0, session?.duration || 0)
+
+  return {
+    durationText: formatDuration(Math.round(durationMilliseconds / 1000)),
+    totalSteps: history.filter((entry) => entry.type === 'NAVIGATE' && entry.nodeType !== 'enforceCall').length,
+    backCount,
+    callConfirmed: Boolean(session?.callMethod),
+  }
+}
+
+export default function TerminalStep({
+  node,
+  getReport,
+  onTerminate,
+  practiceMode = false,
+  backCount = 0,
+}) {
   const router = useRouter()
   const [showRefreshDialog, setShowRefreshDialog] = useState(false)
   const [report, setReport] = useState(null)
+  const [practiceSummary, setPracticeSummary] = useState(null)
   const mountedRef = useRef(false)
 
   useEffect(() => {
@@ -21,7 +58,9 @@ export default function TerminalStep({ node, getReport, onTerminate }) {
     try {
       const session = getReport?.() || null
 
-      if (session) {
+      if (practiceMode && session) {
+        setPracticeSummary(buildPracticeSummary(session, backCount))
+      } else if (session) {
         const incidentReport = ReportEngine.generate(session)
         const vault = new VaultEngine()
 
@@ -29,7 +68,11 @@ export default function TerminalStep({ node, getReport, onTerminate }) {
         setReport(incidentReport)
       }
     } catch (_error) {
-      setReport(getReport?.() || null)
+      if (practiceMode) {
+        setPracticeSummary(buildPracticeSummary(getReport?.() || null, backCount))
+      } else {
+        setReport(getReport?.() || null)
+      }
     }
 
     onTerminate?.()
@@ -46,18 +89,32 @@ export default function TerminalStep({ node, getReport, onTerminate }) {
     return () => {
       window.clearTimeout(timerId)
     }
-  }, [getReport, onTerminate])
+  }, [backCount, getReport, onTerminate, practiceMode])
 
   return (
     <section className="flex flex-1 flex-col justify-between gap-8">
       <div className="space-y-5">
         <div className="space-y-4">
-          <p className="font-mono text-sm uppercase tracking-[0.3em] text-vita-amber">EMS handoff</p>
+          <p className="font-mono text-sm uppercase tracking-[0.3em] text-vita-amber">
+            {practiceMode ? 'Practice complete' : 'EMS handoff'}
+          </p>
           <h1 className={FLOW_HEADLINE_CLASS}>{node.headline}</h1>
           <p className={FLOW_BODY_CLASS}>{node.instruction}</p>
         </div>
 
-        {report ? (
+        {practiceMode && practiceSummary ? (
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-300">Performance summary</p>
+            <p className="mt-3 text-base text-white/90">Time to complete: {practiceSummary.durationText}</p>
+            <p className="text-base text-white/90">Total steps: {practiceSummary.totalSteps}</p>
+            <p className="text-base text-white/90">Steps where you went back: {practiceSummary.backCount}</p>
+            <p className="text-base text-white/90">
+              Call confirmed: {practiceSummary.callConfirmed ? 'yes' : 'no'}
+            </p>
+          </div>
+        ) : null}
+
+        {!practiceMode && report ? (
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-300">Session summary</p>
             <p className="mt-3 text-base text-white/90">Protocol: {report.protocolId}</p>

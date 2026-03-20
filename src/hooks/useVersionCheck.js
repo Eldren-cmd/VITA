@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 
 const CURRENT_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || '0.1.0'
 
-function buildPendingUpdate(version) {
+function buildPendingUpdate(version, criticalUpdate) {
   return JSON.stringify({
     version,
+    criticalUpdate: Boolean(criticalUpdate),
     detectedAt: Date.now(),
   })
 }
@@ -26,7 +27,10 @@ export default function useVersionCheck() {
       }
 
       if (window.sessionStorage.getItem('vita_active_session')) {
-        window.localStorage.setItem('vita_pending_critical_update', buildPendingUpdate(version))
+        window.localStorage.setItem(
+          'vita_pending_critical_update',
+          buildPendingUpdate(version, criticalUpdate)
+        )
         return
       }
 

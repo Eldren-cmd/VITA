@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prepare:public": "node scripts/syncPublicAssets.js",
+    "predev": "npm run prepare:public",
+    "prebuild": "npm run prepare:public",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

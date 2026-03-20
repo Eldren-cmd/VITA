@@ -7,6 +7,7 @@ class VITAEngine {
     this.deferredCallTimer = null
     this.pendingDeferredCallSeconds = null
     this.syntheticNode = null
+    this.callGateSkipped = false
 
     const savedSession = VITAEngine.loadSession()
 
@@ -62,6 +63,18 @@ class VITAEngine {
       const selectedOption = currentNode.options?.[optionIndex]
 
       if (!selectedOption) {
+        if (this.practiceMode === true && currentNode.skippable === true) {
+          this.callGateSkipped = true
+          this.history.push({
+            type: 'PRACTICE_CALL_SKIPPED',
+            nodeId: this.currentNodeId,
+            timestamp: Date.now(),
+            synthetic: true,
+          })
+          this._saveSession()
+          return this.protocol.nodes[this.currentNodeId] || null
+        }
+
         this._saveSession()
         return this.protocol.nodes[this.currentNodeId] || null
       }
@@ -122,6 +135,11 @@ class VITAEngine {
         continue
       }
 
+      if (previousEntry.type === 'PRACTICE_CALL_SKIPPED') {
+        this.callGateSkipped = false
+        continue
+      }
+
       if (previousEntry.type === 'NAVIGATE') {
         this._decrementVisited(this.currentNodeId)
         this.currentNodeId = previousEntry.nodeId
@@ -136,6 +154,7 @@ class VITAEngine {
   }
 
   confirmCall(method) {
+    this.callGateSkipped = false
     this.callConfirmed = true
     this.callMethod = method
     this.history.push({
@@ -291,7 +310,7 @@ class VITAEngine {
   }
 
   _requiresCallConfirmation() {
-    if (this.callConfirmed || !this.protocol.callLogic) {
+    if (this.callConfirmed || (this.practiceMode === true && this.callGateSkipped) || !this.protocol.callLogic) {
       return false
     }
 
@@ -321,6 +340,7 @@ class VITAEngine {
       id: '__enforce_call__',
       type: 'enforceCall',
       synthetic: true,
+      skippable: this.practiceMode === true,
       headline: 'Call for help now.',
       callLogic: this.protocol.callLogic,
       options,

@@ -415,6 +415,31 @@ describe('VITAEngine', () => {
 
       expect(global.sessionStorage.getItem('vita_active_session')).toBeNull()
     })
+
+    test('practiceMode exposes a skippable enforceCall node', () => {
+      const engine = new VITAEngine(createCallFirstProtocol(), 'en', {
+        practiceMode: true,
+      })
+
+      const node = engine.getCurrentNode()
+
+      expect(node.type).toBe('enforceCall')
+      expect(node.skippable).toBe(true)
+    })
+
+    test('practiceMode can skip enforceCall without confirming a call', () => {
+      const engine = new VITAEngine(createCallFirstProtocol(), 'en', {
+        practiceMode: true,
+      })
+
+      const callGate = engine.getCurrentNode()
+      const nextNode = engine.advance(callGate.options.length)
+
+      expect(nextNode.id).toBe('start')
+      expect(engine.getCurrentNode().id).toBe('start')
+      expect(engine.callConfirmed).toBe(false)
+      expect(engine.callMethod).toBeNull()
+    })
   })
 
   describe('Deferred call', () => {

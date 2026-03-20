@@ -11,6 +11,7 @@ import {
 
 export default function ActionStep({ node, onAdvance, practiceMode }) {
   const [isFlashing, setIsFlashing] = useState(false)
+  const [showRationaleCard, setShowRationaleCard] = useState(false)
   const timeoutRef = useRef(null)
 
   useEffect(() => {
@@ -21,14 +22,29 @@ export default function ActionStep({ node, onAdvance, practiceMode }) {
     }
   }, [])
 
+  useEffect(() => {
+    setShowRationaleCard(false)
+  }, [node.id])
+
   const handleAdvance = () => {
     setIsFlashing(true)
 
     if (typeof window !== 'undefined') {
       timeoutRef.current = window.setTimeout(() => {
         setIsFlashing(false)
+
+        if (practiceMode && node.rationale && !showRationaleCard) {
+          setShowRationaleCard(true)
+          return
+        }
+
         onAdvance(0)
       }, 120)
+      return
+    }
+
+    if (practiceMode && node.rationale && !showRationaleCard) {
+      setShowRationaleCard(true)
       return
     }
 
@@ -69,7 +85,20 @@ export default function ActionStep({ node, onAdvance, practiceMode }) {
         ) : null}
 
         {practiceMode && node.rationale ? (
-          <aside className="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <aside
+            className={[
+              'rounded-2xl',
+              'border',
+              'border-white/10',
+              'bg-white/5',
+              'p-4',
+              'transition-all',
+              'duration-150',
+              showRationaleCard
+                ? 'translate-y-0 opacity-100'
+                : 'pointer-events-none translate-y-4 opacity-0',
+            ].join(' ')}
+          >
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-vita-amber">Why this step</p>
             <p className="mt-2 text-base text-white/90">{node.rationale}</p>
             <p className="mt-3 font-mono text-xs text-slate-300">{node.rationaleSource}</p>
@@ -81,9 +110,9 @@ export default function ActionStep({ node, onAdvance, practiceMode }) {
         <button
           type="button"
           className={[PRIMARY_BUTTON_CLASS, 'transition-all', getFlashClass(isFlashing)].join(' ')}
-          onClick={handleAdvance}
+          onClick={showRationaleCard ? () => onAdvance(0) : handleAdvance}
         >
-          Step done
+          {showRationaleCard ? 'Dismiss rationale' : 'Step done'}
         </button>
 
         {node.note ? <div className={SECONDARY_BUTTON_CLASS}>{node.note}</div> : null}

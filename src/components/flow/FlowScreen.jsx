@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router'
-
 import { DESIGN_CSS_VARIABLES, SECONDARY_BUTTON_CLASS, SOURCE_BAR_CLASS, getSeverityStyle } from '@/constants/design'
 import { loadProtocol } from '@/constants/hardcodedProtocols'
 import useLanguage from '@/hooks/useLanguage'
@@ -37,7 +35,6 @@ function ErrorState({ message }) {
 }
 
 export default function FlowScreen({ protocolId, practiceMode = false }) {
-  const router = useRouter()
   const { language } = useLanguage()
   const protocol = loadProtocol(protocolId, language)
   const {
@@ -48,6 +45,7 @@ export default function FlowScreen({ protocolId, practiceMode = false }) {
     getReport,
     terminate,
     error,
+    backCount,
     showResumeBanner,
     showDeferredCallAlert,
     dismissDeferredCallAlert,
@@ -60,7 +58,7 @@ export default function FlowScreen({ protocolId, practiceMode = false }) {
   }
 
   if (!protocol || !currentNode) {
-    return <LoadingState message="Loading emergency guidance..." />
+    return <LoadingState message={practiceMode ? 'Loading practice guidance...' : 'Loading emergency guidance...'} />
   }
 
   const hideSafetyChrome = currentNode.synthetic === true && currentNode.type === 'terminal'
@@ -75,7 +73,7 @@ export default function FlowScreen({ protocolId, practiceMode = false }) {
       content = <SafetyCheckStep node={currentNode} onAdvance={advance} />
       break
     case 'enforceCall':
-      content = <EnforceCallStep node={currentNode} onAdvance={advance} />
+      content = <EnforceCallStep node={currentNode} onAdvance={advance} practiceMode={practiceMode} />
       break
     case 'question':
       content = <QuestionStep node={currentNode} onAdvance={advance} />
@@ -90,7 +88,15 @@ export default function FlowScreen({ protocolId, practiceMode = false }) {
       content = <TimerStep node={currentNode} onAdvance={advance} language={language} />
       break
     case 'terminal':
-      content = <TerminalStep node={currentNode} getReport={getReport} onTerminate={terminate} />
+      content = (
+        <TerminalStep
+          node={currentNode}
+          getReport={getReport}
+          onTerminate={terminate}
+          practiceMode={practiceMode}
+          backCount={backCount}
+        />
+      )
       break
     default:
       content = <ErrorState message={`Unsupported node type: ${currentNode.type}`} />
