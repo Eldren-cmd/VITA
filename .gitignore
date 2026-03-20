@@ -6,3 +6,4 @@ node_modules/
 .vercel/
 public/data/
 public/service-worker.js
+public/icons/favicon.ico.png
