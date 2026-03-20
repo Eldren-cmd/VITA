@@ -14,6 +14,7 @@ import SafetyCheckStep from '@/components/flow/SafetyCheckStep'
 import TerminalStep from '@/components/flow/TerminalStep'
 import TimerStep from '@/components/flow/TimerStep'
 import SOSButton from '@/components/layout/SOSButton'
+import LanguageFallbackBanner from '@/components/onboarding/LanguageFallbackBanner'
 
 function LoadingState({ message }) {
   return (
@@ -35,7 +36,7 @@ function ErrorState({ message }) {
 }
 
 export default function FlowScreen({ protocolId, practiceMode = false }) {
-  const { language } = useLanguage()
+  const { language, fallbackUsed } = useLanguage()
   const protocol = loadProtocol(protocolId, language)
   const {
     currentNode,
@@ -62,6 +63,7 @@ export default function FlowScreen({ protocolId, practiceMode = false }) {
   }
 
   const hideSafetyChrome = currentNode.synthetic === true && currentNode.type === 'terminal'
+  const showLanguageFallbackBanner = fallbackUsed || protocol.localeMeta?.fallbackUsed
   const showBackButton =
     !hideSafetyChrome && currentNode.type !== 'enforceCall' && currentNode.id !== protocol.entry
   const showEscapeHatch = !hideSafetyChrome && currentNode.type !== 'enforceCall'
@@ -122,6 +124,12 @@ export default function FlowScreen({ protocolId, practiceMode = false }) {
         {showResumeBanner ? (
           <div className="mb-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/90">
             Previous session restored.
+          </div>
+        ) : null}
+
+        {showLanguageFallbackBanner ? (
+          <div className="mb-4">
+            <LanguageFallbackBanner visible={showLanguageFallbackBanner} />
           </div>
         ) : null}
 

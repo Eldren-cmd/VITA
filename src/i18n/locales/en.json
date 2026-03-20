@@ -1,0 +1,13 @@
+{
+  "language": {
+    "selectorLabel": "Language",
+    "verifiedOnlyNote": "Only clinically verified languages can be selected.",
+    "englishLabel": "English",
+    "yorubaPendingLabel": "Yoruba",
+    "yorubaPendingNote": "Available only after peer review."
+  },
+  "fallback": {
+    "headline": "English in use",
+    "body": "When a protocol is not yet verified in your selected language, VITA shows English automatically."
+  }
+}

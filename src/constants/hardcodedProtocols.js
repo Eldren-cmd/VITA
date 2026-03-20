@@ -22,6 +22,18 @@ function cloneProtocol(protocol) {
   return JSON.parse(JSON.stringify(protocol))
 }
 
+function buildLocaleMeta(protocol, language) {
+  const requestedLanguage = language || 'en'
+  const availableLocales = protocol?.governance?.availableLocales || ['en']
+  const resolvedLanguage = availableLocales.includes(requestedLanguage) ? requestedLanguage : 'en'
+
+  return {
+    requestedLanguage,
+    resolvedLanguage,
+    fallbackUsed: requestedLanguage !== resolvedLanguage,
+  }
+}
+
 export const HARDCODED_PROTOCOLS = Object.freeze({
   'cpr-adult': cprAdult,
   'cpr-child': cprChild,
@@ -49,11 +61,12 @@ export const PROTOCOL_LIBRARY = Object.freeze({
 })
 
 export function loadProtocol(protocolId, language = 'en') {
-  const locale = language === 'yo' ? 'yo' : 'en'
+  const protocol = cloneProtocol(PROTOCOL_LIBRARY[protocolId] || null)
 
-  if (locale !== 'en') {
-    return cloneProtocol(PROTOCOL_LIBRARY[protocolId] || null)
+  if (!protocol) {
+    return null
   }
 
-  return cloneProtocol(PROTOCOL_LIBRARY[protocolId] || null)
+  protocol.localeMeta = buildLocaleMeta(protocol, language)
+  return protocol
 }

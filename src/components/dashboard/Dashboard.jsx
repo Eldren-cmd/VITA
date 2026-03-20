@@ -14,6 +14,7 @@ import useVault from '@/hooks/useVault'
 
 import EmergencyGrid from '@/components/dashboard/EmergencyGrid'
 import SOSButton from '@/components/layout/SOSButton'
+import LanguageSelector from '@/components/onboarding/LanguageSelector'
 import QuickAccessCard from '@/components/vault/QuickAccessCard'
 
 export default function Dashboard() {
@@ -63,6 +64,10 @@ export default function Dashboard() {
             </Link>
           </div>
         </header>
+
+        <section className="mt-8 space-y-4">
+          <LanguageSelector />
+        </section>
 
         <section className="mt-8 space-y-4">
           <div className="flex items-center justify-between gap-4">

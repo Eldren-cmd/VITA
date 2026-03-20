@@ -10,6 +10,7 @@ import useLanguage from '@/hooks/useLanguage'
 
 import SafetyCheckStep from '@/components/flow/SafetyCheckStep'
 import SOSButton from '@/components/layout/SOSButton'
+import LanguageFallbackBanner from '@/components/onboarding/LanguageFallbackBanner'
 
 function ProtocolListModal({ open, onClose, onSelect, language }) {
   if (!open) {
@@ -145,7 +146,7 @@ function NotSureStep({ node, onOpenProtocols }) {
 
 export default function TriageFlow() {
   const router = useRouter()
-  const { language } = useLanguage()
+  const { language, fallbackUsed } = useLanguage()
   const engineRef = useRef(null)
   const [currentNode, setCurrentNode] = useState(null)
   const [resolution, setResolution] = useState(null)
@@ -214,6 +215,12 @@ export default function TriageFlow() {
       <SOSButton />
 
       <div className="mx-auto flex min-h-screen max-w-[480px] flex-col px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-[calc(1rem+env(safe-area-inset-top))]">
+        {fallbackUsed ? (
+          <div className="mb-4">
+            <LanguageFallbackBanner visible={fallbackUsed} />
+          </div>
+        ) : null}
+
         <header className="mb-6 flex items-center justify-between gap-4">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-vita-amber">Universal triage</p>
