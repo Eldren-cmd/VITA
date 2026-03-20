@@ -1,6 +1,8 @@
 import type { AppProps } from 'next/app'
+import type { CSSProperties } from 'react'
 import { DM_Serif_Display, IBM_Plex_Mono } from 'next/font/google'
 
+import { DESIGN_CSS_VARIABLES } from '@/constants/design'
 import '@/styles/globals.css'
 
 const serif = DM_Serif_Display({
@@ -17,9 +19,11 @@ const mono = IBM_Plex_Mono({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className={`${serif.variable} ${mono.variable}`}>
+    <main
+      className={`${serif.variable} ${mono.variable} min-h-screen`}
+      style={DESIGN_CSS_VARIABLES as CSSProperties}
+    >
       <Component {...pageProps} />
     </main>
   )
 }
-
