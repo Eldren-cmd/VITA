@@ -1,0 +1,255 @@
+{
+  "id": "cpr-adult",
+  "label": "CPR — Adult (12+)",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "IMMEDIATE",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": true,
+  "source": {
+    "org": "American Heart Association",
+    "guideline": "2025 Adult Basic Life Support Guidelines",
+    "doi": "10.1161/CIR.0000000000001369",
+    "guidelineDate": "2025-10-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced verbatim from AHA 2025 Adult BLS Guidelines DOI:10.1161/CIR.0000000000001369. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "cpr_a_01",
+      "source": "AHA 2025 Adult BLS"
+    },
+    "cpr_a_01": {
+      "id": "cpr_a_01",
+      "type": "question",
+      "headline": "Are they responding?",
+      "instruction": "Tap their shoulders firmly. Shout their name.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES responding",
+          "next": "cpr_a_breathing_ok"
+        },
+        {
+          "label": "NO response",
+          "next": "cpr_a_02",
+          "elevate": "critical"
+        }
+      ]
+    },
+    "cpr_a_02": {
+      "id": "cpr_a_02",
+      "type": "question",
+      "headline": "Are they breathing normally?",
+      "instruction": "Look for chest rise. Listen. Feel for breath. Gasping or no breathing — answer NO.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES normal breathing",
+          "next": "cpr_a_recovery"
+        },
+        {
+          "label": "NO / gasping / unsure",
+          "next": "cpr_a_03",
+          "elevate": "critical"
+        }
+      ]
+    },
+    "cpr_a_03": {
+      "id": "cpr_a_03",
+      "type": "action",
+      "headline": "Send someone for an AED now.",
+      "instruction": "Shout — get the AED and call emergency services. Both happen at the same time. If alone: start CPR first. Get AED after TWO minutes.",
+      "next": "cpr_a_naloxone",
+      "rationale": "Once cardiac arrest is confirmed by absent breathing, AED retrieval and EMS activation happen simultaneously with CPR initiation. Early defibrillation is the most effective intervention for shockable rhythms.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "cpr_a_naloxone": {
+      "id": "cpr_a_naloxone",
+      "type": "question",
+      "headline": "Any chance this was an opioid overdose?",
+      "instruction": "Signs: slow or no breathing, blue lips, very small pupils, unresponsive.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "cpr_a_naloxone_action"
+        },
+        {
+          "label": "NO",
+          "next": "cpr_a_04"
+        }
+      ]
+    },
+    "cpr_a_naloxone_action": {
+      "id": "cpr_a_naloxone_action",
+      "type": "action",
+      "headline": "Give naloxone if you have it.",
+      "instruction": "Nasal spray — one spray in one nostril. Continue CPR. Give second dose after TWO minutes if no response.",
+      "next": "cpr_a_04",
+      "rationale": "Naloxone reverses opioid-induced respiratory depression. CPR continues alongside naloxone administration.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "cpr_a_04": {
+      "id": "cpr_a_04",
+      "type": "action",
+      "headline": "Place hands on chest.",
+      "instruction": "Centre of chest. Between the nipples. Heel of hand. Second hand on top. Arms straight.",
+      "next": "cpr_a_05",
+      "doNot": [
+        "Do not place hands on ribs or lower abdomen."
+      ],
+      "rationale": "Correct hand position delivers force to the sternum, compressing the heart between sternum and spine.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "cpr_a_05": {
+      "id": "cpr_a_05",
+      "type": "metronome",
+      "headline": "Push hard and fast.",
+      "instruction": "TWO inches deep. Do not stop between compressions. Allow full chest recoil after each push.",
+      "bpm": 104,
+      "compressions": 30,
+      "vibrate": true,
+      "beep": true,
+      "visualPulse": true,
+      "next": "cpr_a_06",
+      "doNot": [
+        "Do not lean on chest between compressions."
+      ],
+      "rationale": "Compression depth of 2–2.4 inches and rate of 100–120 per minute maximise cardiac output. Full recoil allows the heart to refill between compressions.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "cpr_a_06": {
+      "id": "cpr_a_06",
+      "type": "action",
+      "headline": "Give TWO rescue breaths.",
+      "instruction": "Tilt head back. Lift chin. Pinch nose. Seal mouth. Blow until chest rises. ONE second per breath.",
+      "next": "cpr_a_07",
+      "doNot": [
+        "Do not give more than TWO breaths before returning to compressions."
+      ],
+      "note": "If unable or unwilling to give breaths — hands-only CPR is acceptable. Continue compressions without interruption.",
+      "rationale": "The 30:2 ratio balances oxygen delivery with perfusion pressure. Excessive ventilation increases intrathoracic pressure and reduces cardiac output.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "cpr_a_07": {
+      "id": "cpr_a_07",
+      "type": "question",
+      "headline": "Has the AED arrived?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "cpr_a_aed_on"
+        },
+        {
+          "label": "NO",
+          "next": "cpr_a_ems"
+        }
+      ]
+    },
+    "cpr_a_aed_on": {
+      "id": "cpr_a_aed_on",
+      "type": "action",
+      "headline": "Turn on the AED.",
+      "instruction": "Follow its voice instructions exactly. It will tell you everything to do. Do not remove pads. After shock is delivered — resume compressions immediately.",
+      "next": "cpr_a_05",
+      "rationale": "AED voice prompts guide the rescuer through pad placement and shock delivery. CPR resumes immediately after shock — do not wait to check for pulse.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "cpr_a_ems": {
+      "id": "cpr_a_ems",
+      "type": "question",
+      "headline": "Has help arrived?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES — EMS is here",
+          "next": "cpr_terminal"
+        },
+        {
+          "label": "NO",
+          "next": "cpr_a_05"
+        }
+      ]
+    },
+    "cpr_terminal": {
+      "id": "cpr_terminal",
+      "type": "terminal",
+      "headline": "EMS has taken over. Well done.",
+      "instruction": "Hand over to EMS. Tell them the time you started, whether AED was used, and whether naloxone was given.",
+      "severity": "critical",
+      "generateReport": true
+    },
+    "cpr_a_recovery": {
+      "id": "cpr_a_recovery",
+      "type": "action",
+      "headline": "They are breathing. Roll them on their side.",
+      "instruction": "Recovery position. Support head. Watch breathing. Stay until help arrives.",
+      "next": "cpr_a_breathing_ok",
+      "rationale": "A breathing person who is unresponsive benefits from a recovery position that helps maintain the airway while you continue monitoring them.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "cpr_a_breathing_ok": {
+      "id": "cpr_a_breathing_ok",
+      "type": "terminal",
+      "headline": "They responded. Keep watching them.",
+      "instruction": "Do not leave them alone. Monitor breathing. Call EMS if condition changes.",
+      "severity": "high",
+      "generateReport": true
+    }
+  }
+}

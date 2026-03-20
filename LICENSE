@@ -1,0 +1,39 @@
+MIT License with Medical Disclaimer Preservation Clause
+
+Copyright (c) 2026 Gabriel Adegboyega
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+1. The above copyright notice and this permission notice shall
+   be included in all copies or substantial portions of the
+   Software.
+
+2. MEDICAL DISCLAIMER PRESERVATION: Any publicly deployed
+   version of this software, or any derivative work, must
+   retain the following disclaimer in full and in a location
+   accessible to end users. The disclaimer may not be removed,
+   modified, or obscured:
+
+   "VITA provides general first aid guidance based on publicly
+   available guidelines from the American Heart Association,
+   American Red Cross, and International Liaison Committee on
+   Resuscitation. This application does not replace professional
+   medical training or advice. Always call emergency services
+   first. Protocol accuracy depends on the guidelines available
+   at the time of last review."
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
