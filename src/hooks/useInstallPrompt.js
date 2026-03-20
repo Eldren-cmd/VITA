@@ -27,9 +27,11 @@ function detectPlatformState() {
 
 export default function useInstallPrompt() {
   const deferredPromptRef = useRef(null)
+  const installTimeoutRef = useRef(null)
   const [platformState, setPlatformState] = useState(detectPlatformState)
   const [showInstructions, setShowInstructions] = useState(false)
   const [canPromptInstall, setCanPromptInstall] = useState(false)
+  const [installState, setInstallState] = useState('idle')
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -44,13 +46,16 @@ export default function useInstallPrompt() {
       event.preventDefault()
       deferredPromptRef.current = event
       setCanPromptInstall(true)
+      setInstallState('ready')
       syncPlatformState()
     }
 
     const handleAppInstalled = () => {
+      window.clearTimeout(installTimeoutRef.current)
       deferredPromptRef.current = null
       setCanPromptInstall(false)
       setShowInstructions(false)
+      setInstallState('installed')
       syncPlatformState()
     }
 
@@ -63,6 +68,7 @@ export default function useInstallPrompt() {
     mediaQuery?.addEventListener?.('change', syncPlatformState)
 
     return () => {
+      window.clearTimeout(installTimeoutRef.current)
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
       mediaQuery?.removeEventListener?.('change', syncPlatformState)
@@ -72,12 +78,29 @@ export default function useInstallPrompt() {
   const promptInstall = async () => {
     if (deferredPromptRef.current && !platformState.isInstalled) {
       const promptEvent = deferredPromptRef.current
+      setInstallState('prompting')
 
       try {
         await promptEvent.prompt()
-        await promptEvent.userChoice
+        const choice = await promptEvent.userChoice
+
+        if (choice?.outcome === 'accepted') {
+          setInstallState('pending')
+          installTimeoutRef.current = window.setTimeout(() => {
+            const nextState = detectPlatformState()
+
+            if (!nextState.isInstalled) {
+              setPlatformState(nextState)
+              setInstallState('stalled')
+              setShowInstructions(true)
+            }
+          }, 15000)
+        } else {
+          setInstallState('dismissed')
+        }
       } catch (_error) {
-        // Silent fail by contract.
+        setInstallState('error')
+        setShowInstructions(true)
       }
 
       deferredPromptRef.current = null
@@ -95,6 +118,7 @@ export default function useInstallPrompt() {
   return {
     ...platformState,
     canPromptInstall,
+    installState,
     showInstructions,
     promptInstall,
     openInstructions,

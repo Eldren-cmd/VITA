@@ -1,6 +1,8 @@
 {
   "name": "VITA \u2014 Emergency First Aid",
   "short_name": "VITA",
+  "id": "/app",
+  "scope": "/",
   "start_url": "/app",
   "display": "standalone",
   "background_color": "#0A0A0F",
