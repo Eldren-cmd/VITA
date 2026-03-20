@@ -1,0 +1,148 @@
+{
+  "id": "choking-infant",
+  "label": "Choking - Infant (<1yr)",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": true,
+  "source": {
+    "org": "American Heart Association / American Academy of Pediatrics",
+    "guideline": "2025 Pediatric Basic Life Support Guidelines",
+    "doi": "10.1161/CIR.0000000000001370",
+    "guidelineDate": "2025-10-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced verbatim from AHA/AAP 2025 Pediatric BLS Guidelines DOI:10.1161/CIR.0000000000001370. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Never use abdominal thrusts on an infant.",
+    "Never perform a blind finger sweep."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "choke_i_01"
+    },
+    "choke_i_01": {
+      "id": "choke_i_01",
+      "type": "action",
+      "headline": "Hold face-down. Head lower than chest.",
+      "instruction": "Support the head. Lay the infant along your forearm. Give FIVE back blows with the heel of your hand between the shoulder blades.",
+      "next": "choke_i_02",
+      "rationale": "Infant choking care starts face-down with FIVE back blows while keeping the head lower than the chest.",
+      "rationaleSource": "AHA/AAP 2025 Pediatric BLS DOI:10.1161/CIR.0000000000001370"
+    },
+    "choke_i_02": {
+      "id": "choke_i_02",
+      "type": "action",
+      "headline": "Flip face-up. Give FIVE chest thrusts.",
+      "instruction": "Use TWO fingers just below the nipple line. Push down about one third of the chest depth FIVE times.",
+      "next": "choke_i_03",
+      "doNot": [
+        "Never use abdominal thrusts on an infant."
+      ],
+      "rationale": "The infant sequence alternates FIVE back blows with FIVE chest thrusts and never uses abdominal thrusts.",
+      "rationaleSource": "AHA/AAP 2025 Pediatric BLS DOI:10.1161/CIR.0000000000001370"
+    },
+    "choke_i_03": {
+      "id": "choke_i_03",
+      "type": "question",
+      "headline": "Did the object come out?",
+      "displayMode": "threeButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "choke_i_recovered"
+        },
+        {
+          "label": "NO",
+          "next": "choke_i_01"
+        },
+        {
+          "label": "UNRESPONSIVE",
+          "next": "choke_i_cpr"
+        }
+      ]
+    },
+    "choke_i_recovered": {
+      "id": "choke_i_recovered",
+      "type": "terminal",
+      "headline": "Keep watching the infant.",
+      "instruction": "Monitor breathing and seek medical evaluation because internal injury can still be present.",
+      "severity": "high",
+      "generateReport": true
+    },
+    "choke_i_cpr": {
+      "id": "choke_i_cpr",
+      "type": "action",
+      "headline": "Start infant CPR now.",
+      "instruction": "Begin infant CPR. Before each breath, look in the mouth and remove the object only if you can see it.",
+      "next": "choke_i_route_cpr",
+      "doNot": [
+        "Never do a blind finger sweep."
+      ],
+      "rationale": "If the infant becomes unresponsive, the protocol changes immediately to infant CPR with only visible-object removal.",
+      "rationaleSource": "AHA/AAP 2025 Pediatric BLS DOI:10.1161/CIR.0000000000001370"
+    },
+    "choke_i_route_cpr": {
+      "id": "choke_i_route_cpr",
+      "type": "terminal",
+      "headline": "Switch to infant CPR now.",
+      "instruction": "Move into the infant CPR flow immediately.",
+      "severity": "critical",
+      "routesTo": "cpr-infant",
+      "generateReport": true
+    }
+  }
+}

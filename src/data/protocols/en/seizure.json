@@ -1,0 +1,146 @@
+{
+  "id": "seizure",
+  "label": "Seizure",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_if_escalation_trigger",
+    "triggerNodeIds": [
+      "seizure_terminal"
+    ],
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": false,
+  "source": {
+    "org": "American Heart Association / American Red Cross",
+    "guideline": "2024 First Aid Guidelines",
+    "doi": "10.1161/CIR.0000000000001281",
+    "guidelineDate": "2024-11-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced from AHA/Red Cross 2024 First Aid Guidelines DOI:10.1161/CIR.0000000000001281. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not put anything in the mouth.",
+    "Do not restrain the person."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "seizure_01"
+    },
+    "seizure_01": {
+      "id": "seizure_01",
+      "type": "action",
+      "headline": "Clear the area around them.",
+      "instruction": "Remove hard or sharp objects nearby, place something soft under the head, and note the start time.",
+      "next": "seizure_02",
+      "doNot": [
+        "Do not restrain them.",
+        "Do not put anything in the mouth."
+      ],
+      "rationale": "The first seizure priorities are injury prevention and timing, not restraint or airway insertion.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "seizure_02": {
+      "id": "seizure_02",
+      "type": "action",
+      "headline": "Turn them gently on their side.",
+      "instruction": "If possible, turn them on the side and continue watching the time.",
+      "next": "seizure_03",
+      "rationale": "Side positioning can help protect the airway during or after seizure activity when it can be done safely.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "seizure_03": {
+      "id": "seizure_03",
+      "type": "question",
+      "headline": "Is any danger sign present?",
+      "instruction": "Danger signs include first seizure, more than FIVE minutes, repeated seizures, water, injury, breathing trouble, infant under SIX months, pregnancy, or no recovery within FIVE to TEN minutes.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "seizure_terminal"
+        },
+        {
+          "label": "NO",
+          "next": "seizure_04"
+        }
+      ]
+    },
+    "seizure_04": {
+      "id": "seizure_04",
+      "type": "action",
+      "headline": "They are coming around. Stay calm.",
+      "instruction": "Speak calmly. Do not give food or water until fully alert. Stay with them until they recover.",
+      "next": "seizure_recovered",
+      "rationale": "Post-seizure confusion is common, so reassurance and observation are the main steps when emergency triggers are absent.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "seizure_recovered": {
+      "id": "seizure_recovered",
+      "type": "terminal",
+      "headline": "They have recovered.",
+      "instruction": "Recommend medical follow-up even if EMS is not needed right now.",
+      "severity": "high",
+      "generateReport": true
+    },
+    "seizure_terminal": {
+      "id": "seizure_terminal",
+      "type": "terminal",
+      "headline": "Call EMS. This seizure needs emergency help.",
+      "instruction": "Keep them on the side if possible and stay with them until EMS arrives.",
+      "severity": "critical",
+      "generateReport": true
+    }
+  }
+}
+

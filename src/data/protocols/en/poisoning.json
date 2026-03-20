@@ -1,0 +1,192 @@
+{
+  "id": "poisoning",
+  "label": "Poisoning",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": false,
+  "source": {
+    "org": "American Heart Association / American Red Cross / American Heart Association",
+    "guideline": "2024 First Aid Guidelines + 2025 Adult Basic Life Support Guidelines",
+    "doi": "10.1161/CIR.0000000000001281 + 10.1161/CIR.0000000000001369",
+    "guidelineDate": "2025-10-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced from AHA/Red Cross 2024 First Aid Guidelines and AHA 2025 Adult BLS Guidelines DOI:10.1161/CIR.0000000000001281 + 10.1161/CIR.0000000000001369. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not induce vomiting unless poison control tells you to.",
+    "Do not give home remedies unless directed."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "pois_01"
+    },
+    "pois_01": {
+      "id": "pois_01",
+      "type": "question",
+      "headline": "Are they conscious and breathing?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "pois_opioid_check"
+        },
+        {
+          "label": "NO",
+          "next": "pois_cpr"
+        }
+      ]
+    },
+    "pois_cpr": {
+      "id": "pois_cpr",
+      "type": "action",
+      "headline": "Start CPR now.",
+      "instruction": "Move into adult CPR immediately.",
+      "next": "pois_route_cpr",
+      "rationale": "An unresponsive poisoned person who is not breathing normally needs CPR immediately.",
+      "rationaleSource": "AHA/Red Cross 2024 + AHA 2025 DOI:10.1161/CIR.0000000000001281 + 10.1161/CIR.0000000000001369"
+    },
+    "pois_route_cpr": {
+      "id": "pois_route_cpr",
+      "type": "terminal",
+      "headline": "Switch to adult CPR now.",
+      "instruction": "Move into the adult CPR flow immediately.",
+      "severity": "critical",
+      "routesTo": "cpr-adult",
+      "generateReport": true
+    },
+    "pois_opioid_check": {
+      "id": "pois_opioid_check",
+      "type": "question",
+      "headline": "Any chance this was an opioid?",
+      "instruction": "Think about slow breathing, blue lips, very small pupils, or extreme unresponsiveness.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "pois_naloxone_conscious"
+        },
+        {
+          "label": "NO",
+          "next": "pois_conscious"
+        }
+      ]
+    },
+    "pois_naloxone_conscious": {
+      "id": "pois_naloxone_conscious",
+      "type": "action",
+      "headline": "Give naloxone if you have it.",
+      "instruction": "Use a nasal spray dose in one nostril, then keep monitoring closely.",
+      "next": "pois_naloxone_check",
+      "rationale": "Naloxone addresses likely opioid poisoning, but close observation must continue because breathing can worsen again.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "pois_naloxone_check": {
+      "id": "pois_naloxone_check",
+      "type": "question",
+      "headline": "Are they still conscious?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "pois_conscious"
+        },
+        {
+          "label": "NO",
+          "next": "pois_cpr"
+        }
+      ]
+    },
+    "pois_conscious": {
+      "id": "pois_conscious",
+      "type": "action",
+      "headline": "Call poison control now.",
+      "instruction": "Nigeria: LUTH 01-7745853 or UCH 02-2413701. US: 1-800-222-1222. UK: 111. Describe the substance and follow instructions exactly.",
+      "next": "pois_monitor",
+      "doNot": [
+        "Do not induce vomiting unless poison control tells you to.",
+        "Do not give home remedies unless directed."
+      ],
+      "rationale": "Poison control gives substance-specific advice that is safer than guessing treatment at the scene.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "pois_monitor": {
+      "id": "pois_monitor",
+      "type": "action",
+      "headline": "Stay with them. Follow all instructions.",
+      "instruction": "Monitor breathing and consciousness. If they become unresponsive, start CPR.",
+      "next": "pois_monitor_check",
+      "rationale": "Poisoned patients can worsen quickly, so ongoing monitoring is part of the response even after poison control is contacted.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "pois_monitor_check": {
+      "id": "pois_monitor_check",
+      "type": "question",
+      "headline": "Are they still conscious?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "pois_monitor"
+        },
+        {
+          "label": "NO",
+          "next": "pois_cpr"
+        }
+      ]
+    }
+  }
+}

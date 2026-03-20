@@ -1,0 +1,197 @@
+{
+  "id": "choking-adult",
+  "label": "Choking - Adult and Child (Age 1+)",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": true,
+  "source": {
+    "org": "American Heart Association",
+    "guideline": "2025 Adult Basic Life Support Guidelines",
+    "doi": "10.1161/CIR.0000000000001369",
+    "guidelineDate": "2025-10-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced verbatim from AHA 2025 Adult BLS Guidelines DOI:10.1161/CIR.0000000000001369. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not use abdominal thrusts on infants.",
+    "Do not perform blind finger sweeps."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "choke_a_01"
+    },
+    "choke_a_01": {
+      "id": "choke_a_01",
+      "type": "question",
+      "headline": "Can they cough or speak?",
+      "instruction": "Encourage them to cough if they can.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "choke_a_mild"
+        },
+        {
+          "label": "NO",
+          "next": "choke_a_02"
+        }
+      ]
+    },
+    "choke_a_mild": {
+      "id": "choke_a_mild",
+      "type": "action",
+      "headline": "Encourage them to keep coughing.",
+      "instruction": "Stand by and watch closely. Call EMS if it worsens.",
+      "next": "choke_a_01",
+      "rationale": "A person who can cough or speak has a partial obstruction, and strong coughing is the preferred first response.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "choke_a_02": {
+      "id": "choke_a_02",
+      "type": "question",
+      "headline": "Are they pregnant or very overweight?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "choke_a_chest_thrusts"
+        },
+        {
+          "label": "NO",
+          "next": "choke_a_03"
+        }
+      ]
+    },
+    "choke_a_03": {
+      "id": "choke_a_03",
+      "type": "action",
+      "headline": "Give FIVE firm back blows.",
+      "instruction": "Lean them forward. Use the heel of your hand between the shoulder blades. Give FIVE hard blows.",
+      "next": "choke_a_04",
+      "rationale": "The updated adult BLS sequence begins with FIVE back blows for severe airway obstruction.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "choke_a_04": {
+      "id": "choke_a_04",
+      "type": "action",
+      "headline": "Give FIVE abdominal thrusts.",
+      "instruction": "Stand behind them. Put a fist above the navel and below the breastbone. Pull inward and upward FIVE times.",
+      "next": "choke_a_05",
+      "rationale": "After back blows, the adult-and-child sequence continues with FIVE abdominal thrusts unless a chest-thrust exception applies.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "choke_a_chest_thrusts": {
+      "id": "choke_a_chest_thrusts",
+      "type": "action",
+      "headline": "Give FIVE chest thrusts.",
+      "instruction": "Place your fist on the centre of the breastbone and pull straight back FIVE times.",
+      "next": "choke_a_05",
+      "rationale": "Pregnancy and very large body habitus are exceptions where chest thrusts are used instead of abdominal thrusts.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "choke_a_05": {
+      "id": "choke_a_05",
+      "type": "question",
+      "headline": "Did the object come out?",
+      "displayMode": "threeButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "choke_a_recovered"
+        },
+        {
+          "label": "NO",
+          "next": "choke_a_03"
+        },
+        {
+          "label": "UNRESPONSIVE",
+          "next": "choke_a_unresponsive"
+        }
+      ]
+    },
+    "choke_a_recovered": {
+      "id": "choke_a_recovered",
+      "type": "terminal",
+      "headline": "Keep watching them.",
+      "instruction": "Monitor breathing and seek medical evaluation because internal injury is possible.",
+      "severity": "high",
+      "generateReport": true
+    },
+    "choke_a_unresponsive": {
+      "id": "choke_a_unresponsive",
+      "type": "action",
+      "headline": "Lower them to the ground carefully.",
+      "instruction": "Start CPR. Before each breath, look in the mouth and remove the object only if it is clearly visible.",
+      "next": "choke_a_route_cpr",
+      "doNot": [
+        "Do not sweep the mouth blindly."
+      ],
+      "rationale": "When a choking person becomes unresponsive, CPR begins and mouth checks stay visual only before breaths.",
+      "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
+    },
+    "choke_a_route_cpr": {
+      "id": "choke_a_route_cpr",
+      "type": "terminal",
+      "headline": "Switch to adult CPR now.",
+      "instruction": "Move into the adult CPR flow immediately.",
+      "severity": "critical",
+      "routesTo": "cpr-adult",
+      "generateReport": true
+    }
+  }
+}
+

@@ -1,0 +1,215 @@
+{
+  "id": "cpr-child",
+  "label": "CPR - Child (1-11)",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "IMMEDIATE",
+  "callLogic": {
+    "type": "cpr_first_if_unwitnessed",
+    "options": [
+      {
+        "label": "Someone else is here",
+        "method": "bystander"
+      },
+      {
+        "label": "I am alone - I saw it happen",
+        "method": "direct"
+      },
+      {
+        "label": "I am alone - I did not see it happen",
+        "method": "deferred",
+        "deferCallSeconds": 120
+      }
+    ]
+  },
+  "hardcoded": true,
+  "source": {
+    "org": "American Heart Association / American Academy of Pediatrics",
+    "guideline": "2025 Pediatric Basic Life Support Guidelines",
+    "doi": "10.1161/CIR.0000000000001370",
+    "guidelineDate": "2025-10-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced verbatim from AHA/AAP 2025 Pediatric BLS Guidelines DOI:10.1161/CIR.0000000000001370. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "cpr_c_rescuer"
+    },
+    "cpr_c_rescuer": {
+      "id": "cpr_c_rescuer",
+      "type": "question",
+      "headline": "Are you alone or with a helper?",
+      "instruction": "This determines the compression-to-breath ratio.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "One rescuer",
+          "next": "cpr_c_01_single"
+        },
+        {
+          "label": "Two rescuers",
+          "next": "cpr_c_01_two"
+        }
+      ]
+    },
+    "cpr_c_01_single": {
+      "id": "cpr_c_01_single",
+      "type": "action",
+      "headline": "Place ONE hand on chest.",
+      "instruction": "Centre of chest. Heel of one hand. Or both hands if the child is larger. You will do THIRTY compressions then TWO breaths.",
+      "next": "cpr_c_02_single",
+      "rationale": "Single-rescuer child CPR uses a THIRTY-to-TWO compression-to-breath ratio in the pediatric BLS sequence.",
+      "rationaleSource": "AHA/AAP 2025 Pediatric BLS DOI:10.1161/CIR.0000000000001370"
+    },
+    "cpr_c_01_two": {
+      "id": "cpr_c_01_two",
+      "type": "action",
+      "headline": "Place hands on chest.",
+      "instruction": "Centre of chest. Heel of one or both hands. One rescuer compresses and the other gives breaths. You will do FIFTEEN compressions then TWO breaths.",
+      "next": "cpr_c_02_two",
+      "rationale": "Two-rescuer child CPR uses a FIFTEEN-to-TWO ratio so breathing support happens more often.",
+      "rationaleSource": "AHA/AAP 2025 Pediatric BLS DOI:10.1161/CIR.0000000000001370"
+    },
+    "cpr_c_02_single": {
+      "id": "cpr_c_02_single",
+      "type": "metronome",
+      "headline": "Push ONE THIRD of chest depth.",
+      "instruction": "Approximately FIVE centimetres. Full recoil. Count to THIRTY.",
+      "bpm": 104,
+      "compressions": 30,
+      "vibrate": true,
+      "beep": true,
+      "visualPulse": true,
+      "next": "cpr_c_03",
+      "rationale": "Child compressions target about one third of the chest depth, roughly FIVE centimetres, at a steady rate.",
+      "rationaleSource": "AHA/AAP 2025 Pediatric BLS DOI:10.1161/CIR.0000000000001370"
+    },
+    "cpr_c_02_two": {
+      "id": "cpr_c_02_two",
+      "type": "metronome",
+      "headline": "Push ONE THIRD of chest depth.",
+      "instruction": "Approximately FIVE centimetres. Full recoil. Count to FIFTEEN.",
+      "bpm": 104,
+      "compressions": 15,
+      "vibrate": true,
+      "beep": true,
+      "visualPulse": true,
+      "next": "cpr_c_03",
+      "rationale": "When two rescuers are present, the pediatric sequence uses FIFTEEN compressions before breaths.",
+      "rationaleSource": "AHA/AAP 2025 Pediatric BLS DOI:10.1161/CIR.0000000000001370"
+    },
+    "cpr_c_03": {
+      "id": "cpr_c_03",
+      "type": "action",
+      "headline": "Give TWO rescue breaths.",
+      "instruction": "Tilt head back. Lift chin. Pinch nose. Give a small breath until the chest rises. ONE second each.",
+      "next": "cpr_c_04",
+      "note": "If unable to give breaths, hands-only CPR is acceptable.",
+      "rationale": "Children often arrest from breathing problems, so rescue breaths remain part of core pediatric BLS.",
+      "rationaleSource": "AHA/AAP 2025 Pediatric BLS DOI:10.1161/CIR.0000000000001370"
+    },
+    "cpr_c_04": {
+      "id": "cpr_c_04",
+      "type": "question",
+      "headline": "Has the AED arrived?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "cpr_c_aed_on"
+        },
+        {
+          "label": "NO",
+          "next": "cpr_c_ems"
+        }
+      ]
+    },
+    "cpr_c_aed_on": {
+      "id": "cpr_c_aed_on",
+      "type": "action",
+      "headline": "Turn on the AED.",
+      "instruction": "Follow the voice instructions. Use paediatric pads if available. If only adult pads are available, place one on the chest and one on the back. Pads must not touch.",
+      "next": "cpr_c_02_single",
+      "rationale": "The AED should be used as soon as it becomes available, with child-appropriate pad placement if possible.",
+      "rationaleSource": "AHA/AAP 2025 Pediatric BLS DOI:10.1161/CIR.0000000000001370"
+    },
+    "cpr_c_ems": {
+      "id": "cpr_c_ems",
+      "type": "question",
+      "headline": "Has help arrived?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES - EMS is here",
+          "next": "cpr_terminal"
+        },
+        {
+          "label": "NO",
+          "next": "cpr_c_02_single"
+        }
+      ]
+    },
+    "cpr_terminal": {
+      "id": "cpr_terminal",
+      "type": "terminal",
+      "headline": "EMS has taken over.",
+      "instruction": "Tell EMS when you started, whether an AED was used, and which call path you followed.",
+      "severity": "critical",
+      "generateReport": true
+    },
+    "cpr_c_deferred_call": {
+      "id": "cpr_c_deferred_call",
+      "type": "question",
+      "headline": "TWO minutes done. Call EMS now.",
+      "instruction": "Keep doing compressions if possible. Call emergency services and return immediately.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "Called",
+          "next": "cpr_c_02_single"
+        },
+        {
+          "label": "Someone else called",
+          "next": "cpr_c_02_single"
+        }
+      ]
+    }
+  }
+}

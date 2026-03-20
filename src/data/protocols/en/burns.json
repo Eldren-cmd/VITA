@@ -1,0 +1,164 @@
+{
+  "id": "burns",
+  "label": "Burns",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": false,
+  "source": {
+    "org": "American Heart Association / American Red Cross / ILCOR",
+    "guideline": "2024 First Aid Guidelines + 2025 First Aid CoSTR",
+    "doi": "10.1161/CIR.0000000000001281 + 10.1161/CIR.0000000000001358",
+    "guidelineDate": "2025-10-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced from AHA/Red Cross 2024 First Aid Guidelines and ILCOR 2025 First Aid CoSTR DOI:10.1161/CIR.0000000000001281 + 10.1161/CIR.0000000000001358. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not use ice.",
+    "Do not apply butter, toothpaste, or creams.",
+    "Do not burst blisters.",
+    "Do not remove clothing stuck to the burn."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "burns_01"
+    },
+    "burns_01": {
+      "id": "burns_01",
+      "type": "question",
+      "headline": "Is the burn severe?",
+      "instruction": "Answer YES if it is larger than the palm, on the face or genitals, deep, chemical, electrical, smoke-related, or affects a child or older adult.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "burns_severe_note"
+        },
+        {
+          "label": "NO",
+          "next": "burns_02"
+        }
+      ]
+    },
+    "burns_severe_note": {
+      "id": "burns_severe_note",
+      "type": "action",
+      "headline": "This burn needs emergency care.",
+      "instruction": "EMS is coming. Start cooling now and keep cooling while you wait.",
+      "next": "burns_02",
+      "rationale": "Severe burns need emergency care, but cooling starts immediately while help is on the way.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid + ILCOR 2025 DOI:10.1161/CIR.0000000000001281 + 10.1161/CIR.0000000000001358"
+    },
+    "burns_02": {
+      "id": "burns_02",
+      "type": "action",
+      "headline": "Cool with running water now.",
+      "instruction": "Cool the burn with running water until pain is relieved or EMS arrives. There is no fixed time.",
+      "next": "burns_child_check",
+      "doNot": [
+        "No ice.",
+        "No butter, toothpaste, or creams.",
+        "No bursting blisters.",
+        "No removing clothing stuck to the burn."
+      ],
+      "rationale": "The burn-cooling recommendation is to use running water until pain is relieved or EMS arrives, not for a fixed duration.",
+      "rationaleSource": "ILCOR 2025 First Aid CoSTR DOI:10.1161/CIR.0000000000001358"
+    },
+    "burns_child_check": {
+      "id": "burns_child_check",
+      "type": "question",
+      "headline": "Is the person a child?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "burns_child_warning"
+        },
+        {
+          "label": "NO",
+          "next": "burns_cover"
+        }
+      ]
+    },
+    "burns_child_warning": {
+      "id": "burns_child_warning",
+      "type": "action",
+      "headline": "Watch for shivering.",
+      "instruction": "If shivering starts, stop cooling and cover loosely with a clean dry cloth.",
+      "next": "burns_cover",
+      "rationale": "Children are at greater risk of hypothermia during prolonged cooling, so shivering changes the response.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "burns_cover": {
+      "id": "burns_cover",
+      "type": "action",
+      "headline": "Cover loosely with clean cloth.",
+      "instruction": "Use a clean, non-fluffy cloth. Remove jewellery and tight items near the burn if they are not stuck.",
+      "next": "burns_terminal",
+      "rationale": "Loose covering protects the burn while avoiding extra pressure or further tissue injury.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "burns_terminal": {
+      "id": "burns_terminal",
+      "type": "terminal",
+      "headline": "Stay with them until EMS arrives.",
+      "instruction": "Keep them warm overall, monitor breathing, and do not give food or water.",
+      "severity": "high",
+      "generateReport": true
+    }
+  }
+}
+

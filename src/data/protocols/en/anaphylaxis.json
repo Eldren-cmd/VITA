@@ -1,0 +1,216 @@
+{
+  "id": "anaphylaxis",
+  "label": "Anaphylaxis",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": true,
+  "source": {
+    "org": "American Heart Association / American Red Cross",
+    "guideline": "2024 First Aid Guidelines",
+    "doi": "10.1161/CIR.0000000000001281",
+    "guidelineDate": "2024-11-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced verbatim from AHA/Red Cross 2024 First Aid Guidelines DOI:10.1161/CIR.0000000000001281. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not substitute antihistamines for epinephrine."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "ana_01"
+    },
+    "ana_01": {
+      "id": "ana_01",
+      "type": "question",
+      "headline": "Do they have an auto-injector?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "ana_epi"
+        },
+        {
+          "label": "NO",
+          "next": "ana_position"
+        }
+      ]
+    },
+    "ana_epi": {
+      "id": "ana_epi",
+      "type": "action",
+      "headline": "Use the auto-injector now.",
+      "instruction": "Inject into the outer thigh. Through clothing is fine. Hold for TEN seconds and note the time.",
+      "next": "ana_position",
+      "rationale": "Epinephrine is the first-line treatment for anaphylaxis and should not be delayed when an auto-injector is available.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ana_position": {
+      "id": "ana_position",
+      "type": "question",
+      "headline": "Are they having trouble breathing?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "ana_sit_up"
+        },
+        {
+          "label": "NO",
+          "next": "ana_lay_flat"
+        }
+      ]
+    },
+    "ana_sit_up": {
+      "id": "ana_sit_up",
+      "type": "action",
+      "headline": "Help them sit upright.",
+      "instruction": "Sitting may ease breathing difficulty. Stay with them and monitor closely.",
+      "next": "ana_timer",
+      "rationale": "Breathing difficulty is a positioning exception where sitting upright can reduce distress.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ana_lay_flat": {
+      "id": "ana_lay_flat",
+      "type": "action",
+      "headline": "Lay them flat. Raise the legs.",
+      "instruction": "Place them on their back and elevate the legs if possible.",
+      "next": "ana_timer",
+      "rationale": "When breathing difficulty is not the main issue, laying flat with raised legs supports circulation during anaphylaxis.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ana_timer": {
+      "id": "ana_timer",
+      "type": "timer",
+      "headline": "Watch for FIVE minutes.",
+      "duration": 300,
+      "voiceInterval": 60,
+      "next": "ana_second_dose"
+    },
+    "ana_second_dose": {
+      "id": "ana_second_dose",
+      "type": "question",
+      "headline": "Still reacting after FIVE minutes?",
+      "instruction": "If symptoms persist and another injector is available, answer YES.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "ana_epi_two"
+        },
+        {
+          "label": "NO",
+          "next": "ana_monitor"
+        }
+      ]
+    },
+    "ana_epi_two": {
+      "id": "ana_epi_two",
+      "type": "action",
+      "headline": "Give the second dose now.",
+      "instruction": "Use the second injector in the outer thigh and note the time.",
+      "next": "ana_monitor",
+      "rationale": "A second epinephrine dose can be needed when severe symptoms persist after the first dose.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ana_monitor": {
+      "id": "ana_monitor",
+      "type": "action",
+      "headline": "Stay with them until EMS arrives.",
+      "instruction": "Monitor breathing continuously. If they become unresponsive and stop breathing, start CPR.",
+      "next": "ana_conscious_check",
+      "doNot": [
+        "Do not give antihistamines instead of epinephrine."
+      ],
+      "rationale": "Ongoing monitoring is critical because anaphylaxis can worsen quickly even after treatment begins.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ana_conscious_check": {
+      "id": "ana_conscious_check",
+      "type": "question",
+      "headline": "Are they still conscious?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "ana_monitor"
+        },
+        {
+          "label": "NO",
+          "next": "ana_cpr"
+        }
+      ]
+    },
+    "ana_cpr": {
+      "id": "ana_cpr",
+      "type": "action",
+      "headline": "They are unresponsive. Start CPR.",
+      "instruction": "Move into CPR immediately.",
+      "next": "ana_route_cpr",
+      "rationale": "If the person becomes unresponsive and is not breathing normally, the response changes to CPR.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ana_route_cpr": {
+      "id": "ana_route_cpr",
+      "type": "terminal",
+      "headline": "Switch to adult CPR now.",
+      "instruction": "Move into the adult CPR flow immediately.",
+      "severity": "critical",
+      "routesTo": "cpr-adult",
+      "generateReport": true
+    }
+  }
+}

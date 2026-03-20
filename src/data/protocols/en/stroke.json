@@ -1,0 +1,107 @@
+{
+  "id": "stroke",
+  "label": "Stroke",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": false,
+  "source": {
+    "org": "American Heart Association / American Red Cross",
+    "guideline": "2024 First Aid Guidelines",
+    "doi": "10.1161/CIR.0000000000001281",
+    "guidelineDate": "2024-11-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced from AHA/Red Cross 2024 First Aid Guidelines DOI:10.1161/CIR.0000000000001281. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not give aspirin before the cause of the stroke is known."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "stroke_01"
+    },
+    "stroke_01": {
+      "id": "stroke_01",
+      "type": "action",
+      "headline": "Note the exact time now.",
+      "instruction": "Look at a clock or phone. Tell EMS the exact time symptoms started. This is critical for treatment decisions.",
+      "next": "stroke_02",
+      "rationale": "Stroke treatment decisions depend heavily on the exact time the symptoms started.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "stroke_02": {
+      "id": "stroke_02",
+      "type": "action",
+      "headline": "Keep them calm and still.",
+      "instruction": "Help them sit or lie comfortably. Do not give food, water, or medications. Do not leave them alone.",
+      "next": "stroke_03",
+      "doNot": [
+        "Do not give aspirin before the cause is known."
+      ],
+      "rationale": "Supportive care and rapid EMS activation are the key first-aid steps for suspected stroke.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "stroke_03": {
+      "id": "stroke_03",
+      "type": "terminal",
+      "headline": "Stay until EMS arrives.",
+      "instruction": "Monitor breathing and reassure them. If breathing stops, start CPR.",
+      "severity": "critical",
+      "generateReport": true
+    }
+  }
+}
+

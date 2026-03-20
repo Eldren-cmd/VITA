@@ -1,0 +1,183 @@
+{
+  "id": "bleeding",
+  "label": "Bleeding",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": false,
+  "source": {
+    "org": "American Heart Association / American Red Cross",
+    "guideline": "2024 First Aid Guidelines",
+    "doi": "10.1161/CIR.0000000000001281",
+    "guidelineDate": "2024-11-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced from AHA/Red Cross 2024 First Aid Guidelines DOI:10.1161/CIR.0000000000001281. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not remove cloth that is already soaked. Add more on top.",
+    "Do not remove embedded objects."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "bleed_01"
+    },
+    "bleed_01": {
+      "id": "bleed_01",
+      "type": "question",
+      "headline": "Is the bleeding life-threatening?",
+      "instruction": "Life-threatening means blood is spurting, soaking through clothing fast, or coming from a large wound.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "bleed_02"
+        },
+        {
+          "label": "NO",
+          "next": "bleed_minor"
+        }
+      ]
+    },
+    "bleed_02": {
+      "id": "bleed_02",
+      "type": "action",
+      "headline": "Press hard on the wound.",
+      "instruction": "Use the cleanest cloth or clothing available and press directly on the wound.",
+      "next": "bleed_03",
+      "doNot": [
+        "Do not remove the cloth if it becomes soaked.",
+        "Do not remove embedded objects."
+      ],
+      "rationale": "Direct pressure is the first-line response for severe external bleeding.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "bleed_03": {
+      "id": "bleed_03",
+      "type": "timer",
+      "headline": "Hold pressure. Do not release.",
+      "duration": 300,
+      "voiceInterval": 60,
+      "next": "bleed_check"
+    },
+    "bleed_check": {
+      "id": "bleed_check",
+      "type": "question",
+      "headline": "Is the bleeding slowing?",
+      "displayMode": "threeButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "bleed_04_improving"
+        },
+        {
+          "label": "NO",
+          "next": "bleed_04_tourniquet"
+        },
+        {
+          "label": "WORSE",
+          "next": "bleed_04_tourniquet"
+        }
+      ]
+    },
+    "bleed_04_improving": {
+      "id": "bleed_04_improving",
+      "type": "action",
+      "headline": "Keep holding. Do not peek.",
+      "instruction": "Continue pressure until EMS arrives. Add more cloth if needed.",
+      "next": "bleed_terminal",
+      "rationale": "Maintaining uninterrupted pressure gives clots time to form and reduces rebleeding.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "bleed_04_tourniquet": {
+      "id": "bleed_04_tourniquet",
+      "type": "action",
+      "headline": "Apply a tourniquet if on a limb.",
+      "instruction": "Place it TWO to THREE inches above the wound, not over a joint. Tighten until bleeding stops and note the time.",
+      "next": "bleed_terminal",
+      "doNot": [
+        "Do not remove the tourniquet once it is applied."
+      ],
+      "rationale": "When severe limb bleeding does not stop with direct pressure, a tourniquet can control life-threatening blood loss.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "bleed_terminal": {
+      "id": "bleed_terminal",
+      "type": "terminal",
+      "headline": "Hold on. EMS is coming.",
+      "instruction": "Keep holding pressure and tell EMS what you did and when you applied any tourniquet.",
+      "severity": "critical",
+      "generateReport": true
+    },
+    "bleed_minor": {
+      "id": "bleed_minor",
+      "type": "action",
+      "headline": "Clean and cover the wound.",
+      "instruction": "Rinse with clean water, then cover with a clean cloth or bandage.",
+      "next": "bleed_minor_terminal",
+      "rationale": "Minor bleeding is managed with cleaning, covering, and gentle local pressure.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "bleed_minor_terminal": {
+      "id": "bleed_minor_terminal",
+      "type": "terminal",
+      "headline": "Monitor the wound.",
+      "instruction": "Watch for infection or persistent bleeding and seek medical care if the wound is deep or gaping.",
+      "severity": "high",
+      "generateReport": true
+    }
+  }
+}
+

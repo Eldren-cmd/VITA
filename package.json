@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test:engine": "jest --config jest.config.cjs --runInBand"
+    "test:engine": "jest --config jest.config.cjs --runInBand",
+    "validate:protocols": "node scripts/validateProtocols.js"
   },
   "dependencies": {
     "next": "14.2.29",

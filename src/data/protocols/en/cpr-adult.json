@@ -1,6 +1,6 @@
 {
   "id": "cpr-adult",
-  "label": "CPR — Adult (12+)",
+  "label": "CPR - Adult (12+)",
   "version": "1.0.0",
   "locale": "en",
   "priority": "IMMEDIATE",
@@ -94,7 +94,7 @@
       "id": "cpr_a_02",
       "type": "question",
       "headline": "Are they breathing normally?",
-      "instruction": "Look for chest rise. Listen. Feel for breath. Gasping or no breathing — answer NO.",
+      "instruction": "Look for chest rise. Listen. Feel for breath. Gasping or no breathing - answer NO.",
       "displayMode": "twoButton",
       "options": [
         {
@@ -112,7 +112,7 @@
       "id": "cpr_a_03",
       "type": "action",
       "headline": "Send someone for an AED now.",
-      "instruction": "Shout — get the AED and call emergency services. Both happen at the same time. If alone: start CPR first. Get AED after TWO minutes.",
+      "instruction": "Shout - get the AED and call emergency services. Both happen at the same time. If alone: start CPR first. Get AED after TWO minutes.",
       "next": "cpr_a_naloxone",
       "rationale": "Once cardiac arrest is confirmed by absent breathing, AED retrieval and EMS activation happen simultaneously with CPR initiation. Early defibrillation is the most effective intervention for shockable rhythms.",
       "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
@@ -138,7 +138,7 @@
       "id": "cpr_a_naloxone_action",
       "type": "action",
       "headline": "Give naloxone if you have it.",
-      "instruction": "Nasal spray — one spray in one nostril. Continue CPR. Give second dose after TWO minutes if no response.",
+      "instruction": "Nasal spray - one spray in one nostril. Continue CPR. Give second dose after TWO minutes if no response.",
       "next": "cpr_a_04",
       "rationale": "Naloxone reverses opioid-induced respiratory depression. CPR continues alongside naloxone administration.",
       "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
@@ -169,7 +169,7 @@
       "doNot": [
         "Do not lean on chest between compressions."
       ],
-      "rationale": "Compression depth of 2–2.4 inches and rate of 100–120 per minute maximise cardiac output. Full recoil allows the heart to refill between compressions.",
+      "rationale": "Compression depth of 2-2.4 inches and rate of 100-120 per minute maximise cardiac output. Full recoil allows the heart to refill between compressions.",
       "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
     },
     "cpr_a_06": {
@@ -181,7 +181,7 @@
       "doNot": [
         "Do not give more than TWO breaths before returning to compressions."
       ],
-      "note": "If unable or unwilling to give breaths — hands-only CPR is acceptable. Continue compressions without interruption.",
+      "note": "If unable or unwilling to give breaths - hands-only CPR is acceptable. Continue compressions without interruption.",
       "rationale": "The 30:2 ratio balances oxygen delivery with perfusion pressure. Excessive ventilation increases intrathoracic pressure and reduces cardiac output.",
       "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
     },
@@ -205,9 +205,9 @@
       "id": "cpr_a_aed_on",
       "type": "action",
       "headline": "Turn on the AED.",
-      "instruction": "Follow its voice instructions exactly. It will tell you everything to do. Do not remove pads. After shock is delivered — resume compressions immediately.",
+      "instruction": "Follow its voice instructions exactly. It will tell you everything to do. Do not remove pads. After shock is delivered - resume compressions immediately.",
       "next": "cpr_a_05",
-      "rationale": "AED voice prompts guide the rescuer through pad placement and shock delivery. CPR resumes immediately after shock — do not wait to check for pulse.",
+      "rationale": "AED voice prompts guide the rescuer through pad placement and shock delivery. CPR resumes immediately after shock - do not wait to check for pulse.",
       "rationaleSource": "AHA 2025 Adult BLS DOI:10.1161/CIR.0000000000001369"
     },
     "cpr_a_ems": {
@@ -217,7 +217,7 @@
       "displayMode": "twoButton",
       "options": [
         {
-          "label": "YES — EMS is here",
+          "label": "YES - EMS is here",
           "next": "cpr_terminal"
         },
         {

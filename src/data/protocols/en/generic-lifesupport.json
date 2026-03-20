@@ -1,0 +1,175 @@
+{
+  "id": "generic-lifesupport",
+  "label": "Generic Life Support",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": true,
+  "source": {
+    "org": "American Heart Association / American Red Cross",
+    "guideline": "2024 First Aid Guidelines",
+    "doi": "10.1161/CIR.0000000000001281",
+    "guidelineDate": "2024-11-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced verbatim from AHA/Red Cross 2024 First Aid Guidelines DOI:10.1161/CIR.0000000000001281. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "gls_01"
+    },
+    "gls_01": {
+      "id": "gls_01",
+      "type": "action",
+      "headline": "Describe what you see to the dispatcher.",
+      "instruction": "Tell the dispatcher what happened, how many people are involved, and any dangers. Follow the instructions exactly.",
+      "next": "gls_02",
+      "rationale": "Generic life support starts with dispatcher guidance because this fallback is used when the exact emergency is not yet clear.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "gls_02": {
+      "id": "gls_02",
+      "type": "question",
+      "headline": "Are they conscious?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "gls_breathing"
+        },
+        {
+          "label": "NO",
+          "next": "gls_cpr_check"
+        }
+      ]
+    },
+    "gls_breathing": {
+      "id": "gls_breathing",
+      "type": "question",
+      "headline": "Are they breathing normally?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "gls_recovery"
+        },
+        {
+          "label": "NO / not sure",
+          "next": "gls_cpr"
+        }
+      ]
+    },
+    "gls_recovery": {
+      "id": "gls_recovery",
+      "type": "action",
+      "headline": "Roll them into recovery position.",
+      "instruction": "Place them on their side with the head slightly back. Monitor breathing and stay until EMS arrives.",
+      "next": "gls_monitor",
+      "rationale": "A breathing but unresponsive person is safest on the side so the airway stays open while you monitor them.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "gls_monitor": {
+      "id": "gls_monitor",
+      "type": "question",
+      "headline": "Are they still breathing?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "gls_monitor"
+        },
+        {
+          "label": "NO",
+          "next": "gls_cpr"
+        }
+      ]
+    },
+    "gls_cpr_check": {
+      "id": "gls_cpr_check",
+      "type": "question",
+      "headline": "Are they breathing at all?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "gls_recovery"
+        },
+        {
+          "label": "NO / not sure",
+          "next": "gls_cpr"
+        }
+      ]
+    },
+    "gls_cpr": {
+      "id": "gls_cpr",
+      "type": "action",
+      "headline": "Start CPR now.",
+      "instruction": "Move into adult CPR immediately.",
+      "next": "gls_route_cpr",
+      "rationale": "The fallback pathway changes to adult CPR when breathing is absent or not normal.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "gls_route_cpr": {
+      "id": "gls_route_cpr",
+      "type": "terminal",
+      "headline": "Switch to adult CPR now.",
+      "instruction": "Move into the adult CPR flow immediately.",
+      "severity": "critical",
+      "routesTo": "cpr-adult",
+      "generateReport": true
+    }
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "id": "heart-attack",
+  "label": "Heart Attack",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": false,
+  "source": {
+    "org": "American Heart Association / American Red Cross",
+    "guideline": "2024 First Aid Guidelines",
+    "doi": "10.1161/CIR.0000000000001281",
+    "guidelineDate": "2024-11-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced from AHA/Red Cross 2024 First Aid Guidelines DOI:10.1161/CIR.0000000000001281. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not give aspirin unless the person is awake, alert, oriented, able to swallow, not allergic, and not advised against it."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "ha_01"
+    },
+    "ha_01": {
+      "id": "ha_01",
+      "type": "action",
+      "headline": "Help them sit or lie comfortably.",
+      "instruction": "Use whatever position eases discomfort and loosen tight clothing around the neck and chest.",
+      "next": "ha_02",
+      "rationale": "Reducing exertion and discomfort lowers cardiac workload while EMS is on the way.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ha_02": {
+      "id": "ha_02",
+      "type": "question",
+      "headline": "Are they awake, alert, oriented, and able to swallow?",
+      "instruction": "All four must be true before aspirin is considered.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "ha_aspirin"
+        },
+        {
+          "label": "NO",
+          "next": "ha_monitor"
+        }
+      ]
+    },
+    "ha_aspirin": {
+      "id": "ha_aspirin",
+      "type": "question",
+      "headline": "Are they allergic to aspirin?",
+      "instruction": "Also answer YES if a clinician has told them not to take aspirin.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES or unsure",
+          "next": "ha_monitor"
+        },
+        {
+          "label": "NO",
+          "next": "ha_aspirin_give"
+        }
+      ]
+    },
+    "ha_aspirin_give": {
+      "id": "ha_aspirin_give",
+      "type": "action",
+      "headline": "Give ONE aspirin to chew.",
+      "instruction": "A standard THREE HUNDRED milligram tablet is acceptable. Chew it slowly and do not swallow it whole.",
+      "next": "ha_monitor",
+      "doNot": [
+        "Do not give aspirin if the person is not awake, alert, oriented, and able to swallow."
+      ],
+      "rationale": "Aspirin is appropriate only when the person can safely swallow and has no aspirin contraindication.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ha_monitor": {
+      "id": "ha_monitor",
+      "type": "action",
+      "headline": "Stay with them. Watch for changes.",
+      "instruction": "Do not leave them alone. Monitor breathing and responsiveness continuously.",
+      "next": "ha_unresponsive_check",
+      "rationale": "A suspected heart attack can worsen quickly, so continuous observation is part of the response.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ha_unresponsive_check": {
+      "id": "ha_unresponsive_check",
+      "type": "question",
+      "headline": "Are they still conscious?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "ha_monitor"
+        },
+        {
+          "label": "NO",
+          "next": "ha_cpr"
+        }
+      ]
+    },
+    "ha_cpr": {
+      "id": "ha_cpr",
+      "type": "action",
+      "headline": "They are unresponsive. Start CPR.",
+      "instruction": "Move into adult CPR immediately.",
+      "next": "ha_route_cpr",
+      "rationale": "If the person becomes unresponsive and is not breathing normally, the response changes to CPR.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "ha_route_cpr": {
+      "id": "ha_route_cpr",
+      "type": "terminal",
+      "headline": "Switch to adult CPR now.",
+      "instruction": "Move into the adult CPR flow immediately.",
+      "severity": "critical",
+      "routesTo": "cpr-adult",
+      "generateReport": true
+    }
+  }
+}
+

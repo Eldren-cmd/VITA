@@ -1,0 +1,158 @@
+{
+  "id": "unconscious",
+  "label": "Unconscious + Breathing",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_first",
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": false,
+  "source": {
+    "org": "American Heart Association / American Red Cross",
+    "guideline": "2024 First Aid Guidelines",
+    "doi": "10.1161/CIR.0000000000001281",
+    "guidelineDate": "2024-11-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced from AHA/Red Cross 2024 First Aid Guidelines DOI:10.1161/CIR.0000000000001281. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not move a person into recovery position if head, neck, or back injury is suspected."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "uncon_01"
+    },
+    "uncon_01": {
+      "id": "uncon_01",
+      "type": "question",
+      "headline": "Could there be a head, neck, or back injury?",
+      "instruction": "Think about falls, vehicle crashes, diving injuries, or a direct blow to the head or spine.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "uncon_spinal"
+        },
+        {
+          "label": "NO",
+          "next": "uncon_recovery"
+        }
+      ]
+    },
+    "uncon_recovery": {
+      "id": "uncon_recovery",
+      "type": "action",
+      "headline": "Roll them into recovery position.",
+      "instruction": "Place them on their side with the top knee bent and the head slightly back to keep the airway open.",
+      "next": "uncon_monitor",
+      "rationale": "A breathing but unconscious person is safer on the side when spinal injury is not suspected.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "uncon_spinal": {
+      "id": "uncon_spinal",
+      "type": "action",
+      "headline": "Do NOT move them.",
+      "instruction": "Leave them as found. Open the airway gently without moving the neck and watch breathing closely.",
+      "next": "uncon_monitor",
+      "doNot": [
+        "Do not roll or reposition the person."
+      ],
+      "rationale": "Possible spinal injury changes the airway strategy because moving the person can worsen damage.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "uncon_monitor": {
+      "id": "uncon_monitor",
+      "type": "action",
+      "headline": "Watch breathing continuously.",
+      "instruction": "Stay with them. If breathing stops, start CPR immediately.",
+      "next": "uncon_breathing_check",
+      "rationale": "Continuous observation is necessary because an unconscious person's breathing can change quickly.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "uncon_breathing_check": {
+      "id": "uncon_breathing_check",
+      "type": "question",
+      "headline": "Are they still breathing?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "uncon_monitor"
+        },
+        {
+          "label": "NO",
+          "next": "uncon_cpr"
+        }
+      ]
+    },
+    "uncon_cpr": {
+      "id": "uncon_cpr",
+      "type": "action",
+      "headline": "Breathing has stopped. Start CPR.",
+      "instruction": "Move into adult CPR immediately.",
+      "next": "uncon_route_cpr",
+      "rationale": "If breathing stops, the response changes immediately from airway monitoring to CPR.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "uncon_route_cpr": {
+      "id": "uncon_route_cpr",
+      "type": "terminal",
+      "headline": "Switch to adult CPR now.",
+      "instruction": "Move into the adult CPR flow immediately.",
+      "severity": "critical",
+      "routesTo": "cpr-adult",
+      "generateReport": true
+    }
+  }
+}

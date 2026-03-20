@@ -1,0 +1,157 @@
+{
+  "id": "fracture",
+  "label": "Fracture",
+  "version": "1.0.0",
+  "locale": "en",
+  "priority": "high",
+  "callLogic": {
+    "type": "call_if_severe",
+    "triggerNodeIds": [
+      "frac_severe"
+    ],
+    "options": [
+      {
+        "label": "Call NOW",
+        "method": "direct"
+      },
+      {
+        "label": "Someone else is calling",
+        "method": "bystander"
+      },
+      {
+        "label": "I will call while helping",
+        "method": "concurrent"
+      }
+    ]
+  },
+  "hardcoded": false,
+  "source": {
+    "org": "American Heart Association / American Red Cross",
+    "guideline": "2024 First Aid Guidelines",
+    "doi": "10.1161/CIR.0000000000001281",
+    "guidelineDate": "2024-11-01"
+  },
+  "governance": {
+    "reviewedAt": "2026-03-20",
+    "reviewDue": "2027-03-20",
+    "reviewStatus": "current",
+    "clinicalReviewer": {
+      "type": "protocol-author",
+      "note": "Authored by Gabriel Adegboyega. Protocol content sourced from AHA/Red Cross 2024 First Aid Guidelines DOI:10.1161/CIR.0000000000001281. No independent clinical reviewer has verified this file. A qualified clinician review is required before any public deployment."
+    },
+    "lastGuidelineCheck": "2026-03-20",
+    "availableLocales": [
+      "en"
+    ],
+    "translationStatus": "verified"
+  },
+  "contraindications": [
+    "Do not move or straighten the injured limb."
+  ],
+  "fallbackMode": {
+    "ifAssetsUnavailable": "text-only",
+    "ifAudioUnavailable": "visual-pulse",
+    "ifVibrationUnavailable": "audio-beep"
+  },
+  "escapeHatch": {
+    "label": "Call emergency services now",
+    "action": "CALL_EMERGENCY",
+    "fallback": "generic-lifesupport"
+  },
+  "disclaimer": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "practiceMode": {
+    "available": true,
+    "showRationale": true
+  },
+  "entry": "safety_check",
+  "nodes": {
+    "safety_check": {
+      "id": "safety_check",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "frac_01"
+    },
+    "frac_01": {
+      "id": "frac_01",
+      "type": "question",
+      "headline": "Is any severe sign present?",
+      "instruction": "Answer YES if bone is visible, the limb is blue or numb, there is obvious deformity, or weight cannot be borne.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "frac_severe"
+        },
+        {
+          "label": "NO",
+          "next": "frac_02"
+        }
+      ]
+    },
+    "frac_02": {
+      "id": "frac_02",
+      "type": "action",
+      "headline": "Do NOT move or straighten the limb.",
+      "instruction": "Leave it in the position found and support above and below the injury with your hands or padding.",
+      "next": "frac_wound_check",
+      "rationale": "Fractures are safest when stabilised in the position found rather than forced back into alignment.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "frac_wound_check": {
+      "id": "frac_wound_check",
+      "type": "question",
+      "headline": "Is there an open wound?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "frac_03"
+        },
+        {
+          "label": "NO",
+          "next": "frac_ice"
+        }
+      ]
+    },
+    "frac_03": {
+      "id": "frac_03",
+      "type": "action",
+      "headline": "Cover any open wound.",
+      "instruction": "Place a clean cloth over the wound and secure it loosely. Do not press on exposed bone.",
+      "next": "frac_ice",
+      "rationale": "Open fractures need wound protection while avoiding extra pressure on exposed bone.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "frac_ice": {
+      "id": "frac_ice",
+      "type": "action",
+      "headline": "Apply ice wrapped in cloth.",
+      "instruction": "Use a cloth-wrapped cold pack or ice pack. Never place ice directly on the skin.",
+      "next": "frac_minor_terminal",
+      "rationale": "Cold can reduce swelling and pain when it is buffered from the skin.",
+      "rationaleSource": "AHA/Red Cross 2024 First Aid DOI:10.1161/CIR.0000000000001281"
+    },
+    "frac_minor_terminal": {
+      "id": "frac_minor_terminal",
+      "type": "terminal",
+      "headline": "Keep the limb supported.",
+      "instruction": "Do not put weight on it. Seek medical care as soon as possible.",
+      "severity": "high",
+      "generateReport": true
+    },
+    "frac_severe": {
+      "id": "frac_severe",
+      "type": "terminal",
+      "headline": "This fracture needs emergency help.",
+      "instruction": "Keep the limb supported in the position found while EMS comes to you.",
+      "severity": "critical",
+      "generateReport": true
+    }
+  }
+}
+
