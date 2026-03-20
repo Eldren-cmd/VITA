@@ -63,7 +63,7 @@ export default function VaultDashboard() {
           <ProfileForm profile={profile} onSave={updateProfile} />
         </section>
 
-        <section className="mt-10 space-y-4">
+        <section id="delete-data" className="mt-10 space-y-4">
           <h2 className="text-2xl font-bold text-white">Emergency contacts</h2>
           <ContactsForm contacts={contacts} onSave={updateContacts} />
         </section>
