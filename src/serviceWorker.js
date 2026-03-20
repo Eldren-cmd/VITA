@@ -2,9 +2,8 @@ const CURRENT_VERSION = '0.1.0'
 const CRITICAL_CACHE = `vita-critical-${CURRENT_VERSION}`
 const STANDARD_CACHE = `vita-standard-${CURRENT_VERSION}`
 
-// Phase 8 will add the landing page at /. Until then /app is the
-// actual app shell route that must stay available offline.
 const CRITICAL = [
+  '/',
   '/app',
   '/data/protocols/en/cpr-adult.json',
   '/data/protocols/en/cpr-child.json',
@@ -70,6 +69,13 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url)
 
   if (request.method !== 'GET') {
+    return
+  }
+
+  if (request.mode === 'navigate' && url.pathname === '/') {
+    event.respondWith(
+      caches.match('/').then((cachedShell) => cachedShell || fetch('/'))
+    )
     return
   }
 
