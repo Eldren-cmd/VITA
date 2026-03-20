@@ -63,6 +63,9 @@ export default function Dashboard() {
             <Link href="/app/triage" className={PRIMARY_BUTTON_CLASS}>
               Start universal triage
             </Link>
+            <Link href="/app/practice" className={SECONDARY_BUTTON_CLASS}>
+              Open practice mode
+            </Link>
           </div>
         </header>
 

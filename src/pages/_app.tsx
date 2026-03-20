@@ -50,6 +50,8 @@ function getDocumentTitle(pathname: string, type: string | string[] | undefined)
       return 'VITA | Triage'
     case '/app/vault':
       return 'VITA | Vault'
+    case '/app/practice':
+      return 'VITA | Practice'
     case '/app/report/[id]':
       return 'VITA | Incident Report'
     case '/app/emergency/[type]':
