@@ -41,6 +41,48 @@ function ErrorState({ message }) {
   )
 }
 
+function WakeLockStatus({ status }) {
+  if (status === 'inactive') {
+    return null
+  }
+
+  const statusConfig = {
+    active: {
+      title: 'Screen awake active',
+      body: 'Live mode is keeping this screen awake.',
+      className: 'border-emerald-400/30 bg-emerald-400/10 text-emerald-100',
+    },
+    requesting: {
+      title: 'Trying to keep the screen awake',
+      body: 'Stay on this tab while live mode requests wake lock.',
+      className: 'border-white/15 bg-white/5 text-white/90',
+    },
+    unsupported: {
+      title: 'Screen awake not supported here',
+      body: 'Keep your phone unlocked during this live emergency flow.',
+      className: 'border-vita-amber/30 bg-vita-amber/15 text-vita-amber',
+    },
+    denied: {
+      title: 'Screen awake unavailable',
+      body: 'Your browser or device denied wake lock. Keep the display on manually.',
+      className: 'border-vita-amber/30 bg-vita-amber/15 text-vita-amber',
+    },
+  }
+
+  const currentStatus = statusConfig[status]
+
+  if (!currentStatus) {
+    return null
+  }
+
+  return (
+    <div className={`mb-4 rounded-2xl border px-4 py-3 ${currentStatus.className}`}>
+      <p className="font-mono text-[0.7rem] uppercase tracking-[0.2em]">{currentStatus.title}</p>
+      <p className="mt-1 text-sm leading-relaxed">{currentStatus.body}</p>
+    </div>
+  )
+}
+
 export default function FlowScreen({ protocolId, practiceMode = false }) {
   const { language, fallbackUsed } = useLanguage()
   const protocol = loadProtocol(protocolId, language)
@@ -58,7 +100,7 @@ export default function FlowScreen({ protocolId, practiceMode = false }) {
     dismissDeferredCallAlert,
   } = useVITA(protocolId, language, { practiceMode })
 
-  useWakeLock(!practiceMode)
+  const wakeLockStatus = useWakeLock(!practiceMode)
 
   if (error) {
     return <ErrorState message={error} />
@@ -138,6 +180,8 @@ export default function FlowScreen({ protocolId, practiceMode = false }) {
             <LanguageFallbackBanner visible={showLanguageFallbackBanner} />
           </div>
         ) : null}
+
+        {!practiceMode ? <WakeLockStatus status={wakeLockStatus} /> : null}
 
         {!hideSafetyChrome ? (
           <header
