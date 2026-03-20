@@ -5,6 +5,7 @@ import {
   FLOW_BODY_CLASS,
   FLOW_HEADLINE_CLASS,
   PRIMARY_BUTTON_CLASS,
+  SOS_HEADER_CLEARANCE_CLASS,
   SECONDARY_BUTTON_CLASS,
 } from '@/constants/design'
 import VaultEngine from '@/engine/VaultEngine'
@@ -36,13 +37,19 @@ export default function VaultDashboard() {
 
       <div className="mx-auto max-w-[480px] px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-[calc(1rem+env(safe-area-inset-top))]">
         <header className="space-y-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
+          <div
+            className={`flex flex-col gap-4 ${SOS_HEADER_CLEARANCE_CLASS} sm:flex-row sm:items-start sm:justify-between`}
+          >
+            <div className="max-w-[20rem] sm:max-w-none">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-vita-amber">Medical vault</p>
               <h1 className={`${FLOW_HEADLINE_CLASS} mt-3`}>Keep critical health details on-device.</h1>
             </div>
 
-            <button type="button" className={SECONDARY_BUTTON_CLASS} onClick={() => setShowMedicalId(true)}>
+            <button
+              type="button"
+              className={`${SECONDARY_BUTTON_CLASS} sm:min-w-[13rem] sm:w-auto`}
+              onClick={() => setShowMedicalId(true)}
+            >
               Show Medical ID
             </button>
           </div>

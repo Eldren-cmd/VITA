@@ -1,6 +1,10 @@
 import Link from 'next/link'
 
-import { PRIMARY_BUTTON_CLASS, SECONDARY_BUTTON_CLASS } from '@/constants/design'
+import {
+  PRIMARY_BUTTON_CLASS,
+  SECONDARY_BUTTON_CLASS,
+  WRAPPED_CARD_LABEL_CLASS,
+} from '@/constants/design'
 
 const TRIAGE_CARDS = [
   'Bleeding',
@@ -47,15 +51,15 @@ export default function Hero() {
               {TRIAGE_CARDS.map((card) => (
                 <div
                   key={card}
-                  className="min-h-[88px] rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-base font-bold text-white"
+                  className="flex min-h-[96px] items-start rounded-2xl border border-white/10 bg-white/5 px-4 py-4 sm:min-h-[88px]"
                 >
-                  {card}
+                  <span className={WRAPPED_CARD_LABEL_CLASS}>{card}</span>
                 </div>
               ))}
             </div>
 
-            <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-base font-bold text-white">
-              OTHER EMERGENCY DOWN
+            <div className="mt-4 flex min-h-[72px] items-start rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+              <span className={WRAPPED_CARD_LABEL_CLASS}>OTHER EMERGENCY DOWN</span>
             </div>
           </div>
         </div>

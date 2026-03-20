@@ -1,14 +1,20 @@
 import type { AppProps } from 'next/app'
 import type { CSSProperties } from 'react'
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
 import { DM_Serif_Display, IBM_Plex_Mono } from 'next/font/google'
 import { useRouter } from 'next/router'
 
 import { DESIGN_CSS_VARIABLES } from '@/constants/design'
+import { PROTOCOL_LIBRARY } from '@/constants/hardcodedProtocols'
 import VaultEngine from '@/engine/VaultEngine'
 import DisclaimerModal from '@/components/onboarding/DisclaimerModal'
 import useVersionCheck from '@/hooks/useVersionCheck'
 import '@/styles/globals.css'
+
+const DEFAULT_TITLE = 'VITA | Offline-first emergency guidance'
+const DEFAULT_DESCRIPTION =
+  'Offline-first emergency first-aid guidance for triage, CPR, choking, bleeding, and other critical scenarios.'
 
 const serif = DM_Serif_Display({
   weight: ['400'],
@@ -22,11 +28,46 @@ const mono = IBM_Plex_Mono({
   variable: '--font-mono'
 })
 
+function getProtocolLabel(type: string | string[] | undefined) {
+  if (typeof type !== 'string') {
+    return null
+  }
+
+  return PROTOCOL_LIBRARY[type]?.label || null
+}
+
+function getDocumentTitle(pathname: string, type: string | string[] | undefined) {
+  const protocolLabel = getProtocolLabel(type)
+
+  switch (pathname) {
+    case '/':
+      return DEFAULT_TITLE
+    case '/app':
+      return 'VITA | Dashboard'
+    case '/app/about':
+      return 'VITA | About'
+    case '/app/triage':
+      return 'VITA | Triage'
+    case '/app/vault':
+      return 'VITA | Vault'
+    case '/app/report/[id]':
+      return 'VITA | Incident Report'
+    case '/app/emergency/[type]':
+      return protocolLabel ? `VITA | ${protocolLabel}` : 'VITA | Emergency Flow'
+    case '/app/practice/[type]':
+      return protocolLabel ? `VITA | ${protocolLabel} Practice` : 'VITA | Practice Flow'
+    default:
+      return DEFAULT_TITLE
+  }
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean | null>(null)
   const isAppRoute = router.pathname.startsWith('/app')
   useVersionCheck()
+
+  const documentTitle = getDocumentTitle(router.pathname, router.query.type)
 
   useEffect(() => {
     if (!isAppRoute || typeof window === 'undefined') {
@@ -62,25 +103,48 @@ export default function App({ Component, pageProps }: AppProps) {
 
   if (isAppRoute && disclaimerAccepted === false) {
     return (
-      <main
-        className={`${serif.variable} ${mono.variable} min-h-screen`}
-        style={DESIGN_CSS_VARIABLES as CSSProperties}
-      >
-        <DisclaimerModal onAccept={handleAcceptDisclaimer} />
-      </main>
+      <>
+        <Head>
+          <title>{documentTitle}</title>
+          <meta name="description" content={DEFAULT_DESCRIPTION} />
+        </Head>
+
+        <main
+          className={`${serif.variable} ${mono.variable} min-h-screen`}
+          style={DESIGN_CSS_VARIABLES as CSSProperties}
+        >
+          <DisclaimerModal onAccept={handleAcceptDisclaimer} />
+        </main>
+      </>
     )
   }
 
   if (isAppRoute && disclaimerAccepted === null) {
-    return <main className={`${serif.variable} ${mono.variable} min-h-screen bg-bg-base`} />
+    return (
+      <>
+        <Head>
+          <title>{documentTitle}</title>
+          <meta name="description" content={DEFAULT_DESCRIPTION} />
+        </Head>
+
+        <main className={`${serif.variable} ${mono.variable} min-h-screen bg-bg-base`} />
+      </>
+    )
   }
 
   return (
-    <main
-      className={`${serif.variable} ${mono.variable} min-h-screen`}
-      style={DESIGN_CSS_VARIABLES as CSSProperties}
-    >
-      <Component {...pageProps} />
-    </main>
+    <>
+      <Head>
+        <title>{documentTitle}</title>
+        <meta name="description" content={DEFAULT_DESCRIPTION} />
+      </Head>
+
+      <main
+        className={`${serif.variable} ${mono.variable} min-h-screen`}
+        style={DESIGN_CSS_VARIABLES as CSSProperties}
+      >
+        <Component {...pageProps} />
+      </main>
+    </>
   )
 }

@@ -11,8 +11,8 @@ export default function SOSButton() {
       title={`Call ${emergencyNumber}`}
       className={[
         'fixed',
-        'right-4',
-        'top-4',
+        'right-[calc(1rem+env(safe-area-inset-right))]',
+        'top-[calc(1rem+env(safe-area-inset-top))]',
         'z-50',
         'min-h-touch-icon',
         'min-w-[48px]',

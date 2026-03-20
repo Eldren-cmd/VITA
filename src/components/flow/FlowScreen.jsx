@@ -1,4 +1,10 @@
-import { DESIGN_CSS_VARIABLES, SECONDARY_BUTTON_CLASS, SOURCE_BAR_CLASS, getSeverityStyle } from '@/constants/design'
+import {
+  DESIGN_CSS_VARIABLES,
+  SECONDARY_BUTTON_CLASS,
+  SOS_HEADER_CLEARANCE_CLASS,
+  SOURCE_BAR_CLASS,
+  getSeverityStyle,
+} from '@/constants/design'
 import { loadProtocol } from '@/constants/hardcodedProtocols'
 import useLanguage from '@/hooks/useLanguage'
 import useVITA from '@/hooks/useVITA'
@@ -134,17 +140,21 @@ export default function FlowScreen({ protocolId, practiceMode = false }) {
         ) : null}
 
         {!hideSafetyChrome ? (
-          <header className="mb-6 flex items-center justify-between gap-4">
+          <header
+            className={`mb-6 flex flex-col gap-3 ${SOS_HEADER_CLEARANCE_CLASS} sm:flex-row sm:items-center`}
+          >
             {showBackButton ? (
-              <button type="button" className={SECONDARY_BUTTON_CLASS} onClick={() => goBack()}>
+              <button
+                type="button"
+                className={`${SECONDARY_BUTTON_CLASS} sm:w-auto`}
+                onClick={() => goBack()}
+              >
                 Back
               </button>
-            ) : (
-              <div />
-            )}
+            ) : null}
 
             {!hideSafetyChrome ? (
-              <div className={`${SOURCE_BAR_CLASS} max-w-[16rem] text-right`}>
+              <div className={`${SOURCE_BAR_CLASS} max-w-[16rem] text-left sm:ml-auto sm:text-right`}>
                 <div>{protocol.source.org}</div>
                 <div>{protocol.source.doi}</div>
               </div>

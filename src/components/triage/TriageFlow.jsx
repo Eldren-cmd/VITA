@@ -1,7 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 
-import { DESIGN_CSS_VARIABLES, FLOW_BODY_CLASS, FLOW_HEADLINE_CLASS, ICON_BUTTON_CLASS, PRIMARY_BUTTON_CLASS, SECONDARY_BUTTON_CLASS, SOURCE_BAR_CLASS, getSeverityStyle } from '@/constants/design'
+import {
+  DESIGN_CSS_VARIABLES,
+  FLOW_BODY_CLASS,
+  FLOW_HEADLINE_CLASS,
+  ICON_BUTTON_CLASS,
+  PRIMARY_BUTTON_CLASS,
+  SECONDARY_BUTTON_CLASS,
+  SOS_HEADER_CLEARANCE_CLASS,
+  SOURCE_BAR_CLASS,
+  WRAPPED_CARD_LABEL_CLASS,
+  getSeverityStyle,
+} from '@/constants/design'
 import { ALL_PROTOCOL_IDS, EMERGENCY_ROUTE_PREFIX } from '@/constants/protocolIds'
 import { loadProtocol } from '@/constants/hardcodedProtocols'
 import triageData from '@/data/triage.json'
@@ -42,7 +53,7 @@ function ProtocolListModal({ open, onClose, onSelect, language }) {
                 className={ICON_BUTTON_CLASS}
                 onClick={() => onSelect(protocolId)}
               >
-                <span className="block text-lg font-bold">{protocol?.label || protocolId}</span>
+                <span className={WRAPPED_CARD_LABEL_CLASS}>{protocol?.label || protocolId}</span>
                 <span className="mt-1 block font-mono text-xs uppercase tracking-[0.2em] text-slate-300">
                   {protocolId}
                 </span>
@@ -105,7 +116,7 @@ function TriageQuestion({ node, onAdvance }) {
               className={ICON_BUTTON_CLASS}
               onClick={() => onAdvance(index)}
             >
-              <span className="block text-xl font-bold">{option.label}</span>
+              <span className={WRAPPED_CARD_LABEL_CLASS}>{option.label}</span>
             </button>
           ))}
         </div>
@@ -237,12 +248,14 @@ export default function TriageFlow() {
           </div>
         ) : null}
 
-        <header className="mb-6 flex items-center justify-between gap-4">
+        <header
+          className={`mb-6 flex flex-col gap-3 ${SOS_HEADER_CLEARANCE_CLASS} sm:flex-row sm:items-start sm:justify-between`}
+        >
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-vita-amber">Universal triage</p>
             <p className={SOURCE_BAR_CLASS}>Route first. Treat second.</p>
           </div>
-          <div className={`${SOURCE_BAR_CLASS} max-w-[12rem] text-right`}>
+          <div className={`${SOURCE_BAR_CLASS} max-w-[12rem] text-left sm:text-right`}>
             <div>Routing file</div>
             <div>triage.json</div>
           </div>

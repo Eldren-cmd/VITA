@@ -1,4 +1,9 @@
-import { FLOW_BODY_CLASS, FLOW_HEADLINE_CLASS, ICON_BUTTON_CLASS } from '@/constants/design'
+import {
+  FLOW_BODY_CLASS,
+  FLOW_HEADLINE_CLASS,
+  ICON_BUTTON_CLASS,
+  WRAPPED_CARD_LABEL_CLASS,
+} from '@/constants/design'
 
 function getGridClass(displayMode, optionsCount) {
   if (displayMode === 'iconGrid') {
@@ -44,7 +49,7 @@ export default function QuestionStep({ node, onAdvance }) {
             ].join(' ')}
             onClick={() => onAdvance(index)}
           >
-            <span className="block text-xl font-bold">{option.label}</span>
+            <span className={WRAPPED_CARD_LABEL_CLASS}>{option.label}</span>
           </button>
         ))}
       </div>

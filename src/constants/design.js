@@ -16,6 +16,19 @@ export const DESIGN_CSS_VARIABLES = Object.freeze({
 
 export const GLARE_CLASS = 'drop-shadow-glare'
 export const STRONG_GLARE_CLASS = 'drop-shadow-glare-strong'
+export const SOS_HEADER_CLEARANCE_CLASS =
+  'pr-[calc(6.75rem+env(safe-area-inset-right))] sm:pr-0'
+export const WRAPPED_CARD_LABEL_CLASS = [
+  'block',
+  'max-w-full',
+  'text-[clamp(1.05rem,3.8vw,1.5rem)]',
+  'font-bold',
+  'leading-[1.15]',
+  'tracking-[-0.01em]',
+  'text-white',
+  '[overflow-wrap:anywhere]',
+  'break-words',
+].join(' ')
 
 export const PRIMARY_BUTTON_CLASS = [
   'relative',

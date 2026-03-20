@@ -39,7 +39,7 @@ export default function MetronomeStep({ node, onAdvance }) {
 
   return (
     <section
-      className="flex flex-1 flex-col justify-between gap-8 transition-all duration-[50ms]"
+      className="flex flex-1 flex-col justify-between gap-8 transition-[filter] duration-[50ms]"
       style={{ filter: `brightness(${flashIntensity})` }}
     >
       <div className="space-y-4">
@@ -61,12 +61,15 @@ export default function MetronomeStep({ node, onAdvance }) {
             'border',
             'border-white/20',
             'bg-white/5',
+            'transform-gpu',
             'transition-transform',
             'duration-[50ms]',
             pulse ? 'scale-[1.15]' : 'scale-100',
           ].join(' ')}
         >
-          <span className={DATA_TEXT_CLASS}>{getCycleCount(count, node.compressions || 30)}</span>
+          <span className={`${DATA_TEXT_CLASS} tabular-nums`}>
+            {getCycleCount(count, node.compressions || 30)}
+          </span>
         </div>
       </div>
 
