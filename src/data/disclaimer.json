@@ -1,0 +1,8 @@
+{
+  "id": "vita-disclaimer",
+  "type": "disclaimer",
+  "mustAccept": true,
+  "headline": "Read before using VITA.",
+  "body": "VITA provides general first aid guidance based on publicly available guidelines from the American Heart Association, American Red Cross, and International Liaison Committee on Resuscitation. This application does not replace professional medical training or advice. Always call emergency services first. Protocol accuracy depends on the guidelines available at the time of last review.",
+  "acceptLabel": "I understand and accept"
+}

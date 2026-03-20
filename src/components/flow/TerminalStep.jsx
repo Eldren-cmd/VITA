@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 
 import { FLOW_BODY_CLASS, FLOW_HEADLINE_CLASS, PRIMARY_BUTTON_CLASS, SECONDARY_BUTTON_CLASS } from '@/constants/design'
 import ReportEngine from '@/engine/ReportEngine'
 import VaultEngine from '@/engine/VaultEngine'
 
 export default function TerminalStep({ node, getReport, onTerminate }) {
+  const router = useRouter()
   const [showRefreshDialog, setShowRefreshDialog] = useState(false)
   const [report, setReport] = useState(null)
   const mountedRef = useRef(false)
@@ -61,6 +63,13 @@ export default function TerminalStep({ node, getReport, onTerminate }) {
             <p className="mt-3 text-base text-white/90">Protocol: {report.protocolId}</p>
             <p className="text-base text-white/90">Steps logged: {report.steps.length}</p>
             <p className="text-base text-white/90">Call method: {report.callMethod || 'not recorded'}</p>
+            <button
+              type="button"
+              className="mt-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left font-bold text-white"
+              onClick={() => router.push(`/app/report/${report.id}`)}
+            >
+              Open incident report
+            </button>
           </div>
         ) : null}
 
