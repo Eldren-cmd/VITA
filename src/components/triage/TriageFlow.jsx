@@ -6,6 +6,7 @@ import { ALL_PROTOCOL_IDS, EMERGENCY_ROUTE_PREFIX } from '@/constants/protocolId
 import { loadProtocol } from '@/constants/hardcodedProtocols'
 import triageData from '@/data/triage.json'
 import TriageEngine from '@/engine/TriageEngine'
+import useEmergencyCall from '@/hooks/useEmergencyCall'
 import useLanguage from '@/hooks/useLanguage'
 
 import SafetyCheckStep from '@/components/flow/SafetyCheckStep'
@@ -54,7 +55,7 @@ function ProtocolListModal({ open, onClose, onSelect, language }) {
   )
 }
 
-function TriageTerminal({ node, resolution }) {
+function TriageTerminal({ node, resolution, emergencyHref, emergencyNumber }) {
   if (resolution) {
     return (
       <section className="flex flex-1 flex-col justify-center gap-6 text-center">
@@ -74,8 +75,8 @@ function TriageTerminal({ node, resolution }) {
       </div>
 
       <div className="grid gap-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
-        <a href="tel:" className={PRIMARY_BUTTON_CLASS}>
-          Call emergency services
+        <a href={emergencyHref} className={PRIMARY_BUTTON_CLASS}>
+          {`Call emergency services (${emergencyNumber})`}
         </a>
       </div>
     </section>
@@ -123,7 +124,7 @@ function TriageQuestion({ node, onAdvance }) {
   )
 }
 
-function NotSureStep({ node, onOpenProtocols }) {
+function NotSureStep({ node, onOpenProtocols, emergencyHref, emergencyNumber }) {
   return (
     <section className="flex flex-1 flex-col justify-between gap-8">
       <div className="space-y-4">
@@ -133,8 +134,8 @@ function NotSureStep({ node, onOpenProtocols }) {
       </div>
 
       <div className="grid gap-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
-        <a href="tel:" className={PRIMARY_BUTTON_CLASS}>
-          {node.primaryAction.label}
+        <a href={emergencyHref} className={PRIMARY_BUTTON_CLASS}>
+          {`${node.primaryAction.label} (${emergencyNumber})`}
         </a>
         <button type="button" className={SECONDARY_BUTTON_CLASS} onClick={onOpenProtocols}>
           {node.secondaryAction.label}
@@ -146,6 +147,7 @@ function NotSureStep({ node, onOpenProtocols }) {
 
 export default function TriageFlow() {
   const router = useRouter()
+  const { emergencyHref, emergencyNumber } = useEmergencyCall()
   const { language, fallbackUsed } = useLanguage()
   const engineRef = useRef(null)
   const [currentNode, setCurrentNode] = useState(null)
@@ -193,9 +195,23 @@ export default function TriageFlow() {
   } else if (currentNode.type === 'question') {
     content = <TriageQuestion node={currentNode} onAdvance={handleAdvance} />
   } else if (currentNode.type === 'notSure') {
-    content = <NotSureStep node={currentNode} onOpenProtocols={() => setShowProtocolList(true)} />
+    content = (
+      <NotSureStep
+        node={currentNode}
+        onOpenProtocols={() => setShowProtocolList(true)}
+        emergencyHref={emergencyHref}
+        emergencyNumber={emergencyNumber}
+      />
+    )
   } else if (currentNode.type === 'terminal') {
-    content = <TriageTerminal node={currentNode} resolution={resolution} />
+    content = (
+      <TriageTerminal
+        node={currentNode}
+        resolution={resolution}
+        emergencyHref={emergencyHref}
+        emergencyNumber={emergencyNumber}
+      />
+    )
   } else {
     content = (
       <div className="rounded-3xl border border-vita-red/30 bg-bg-critical p-6 text-white">

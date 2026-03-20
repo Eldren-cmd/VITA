@@ -1,9 +1,14 @@
 import { STRONG_GLARE_CLASS } from '@/constants/design'
+import useEmergencyCall from '@/hooks/useEmergencyCall'
 
 export default function SOSButton() {
+  const { emergencyHref, emergencyNumber } = useEmergencyCall()
+
   return (
     <a
-      href="tel:"
+      href={emergencyHref}
+      aria-label={`SOS call ${emergencyNumber}`}
+      title={`Call ${emergencyNumber}`}
       className={[
         'fixed',
         'right-4',

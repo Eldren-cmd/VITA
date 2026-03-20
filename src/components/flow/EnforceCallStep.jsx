@@ -4,8 +4,11 @@ import {
   PRIMARY_BUTTON_CLASS,
   SECONDARY_BUTTON_CLASS,
 } from '@/constants/design'
+import useEmergencyCall from '@/hooks/useEmergencyCall'
 
 export default function EnforceCallStep({ node, onAdvance, practiceMode = false }) {
+  const { emergencyHref, emergencyNumber } = useEmergencyCall()
+
   return (
     <section className="flex flex-1 flex-col justify-between gap-8">
       <div className="space-y-4">
@@ -21,11 +24,11 @@ export default function EnforceCallStep({ node, onAdvance, practiceMode = false 
           option.method === 'direct' ? (
             <a
               key={option.id || option.label}
-              href="tel:"
+              href={emergencyHref}
               className={PRIMARY_BUTTON_CLASS}
               onClick={() => onAdvance(index)}
             >
-              {option.label}
+              {`${option.label} (${emergencyNumber})`}
             </a>
           ) : (
             <button

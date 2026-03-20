@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { FLOW_BODY_CLASS, FLOW_HEADLINE_CLASS, PRIMARY_BUTTON_CLASS, SECONDARY_BUTTON_CLASS } from '@/constants/design'
 import ReportEngine from '@/engine/ReportEngine'
 import VaultEngine from '@/engine/VaultEngine'
+import useEmergencyCall from '@/hooks/useEmergencyCall'
 
 function formatDuration(seconds) {
   if (!seconds || seconds < 60) {
@@ -43,6 +44,7 @@ export default function TerminalStep({
   backCount = 0,
 }) {
   const router = useRouter()
+  const { emergencyHref, emergencyNumber } = useEmergencyCall()
   const [showRefreshDialog, setShowRefreshDialog] = useState(false)
   const [report, setReport] = useState(null)
   const [practiceSummary, setPracticeSummary] = useState(null)
@@ -151,8 +153,8 @@ export default function TerminalStep({
 
       <div className="grid gap-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
         {node.primaryAction?.action === 'CALL_EMERGENCY' ? (
-          <a href="tel:" className={PRIMARY_BUTTON_CLASS}>
-            {node.primaryAction.label}
+          <a href={emergencyHref} className={PRIMARY_BUTTON_CLASS}>
+            {`${node.primaryAction.label} (${emergencyNumber})`}
           </a>
         ) : null}
         {node.secondaryAction ? (
