@@ -1,0 +1,342 @@
+{
+  "id": "triage",
+  "label": "Universal Triage",
+  "version": "1.0.0",
+  "locale": "en",
+  "entry": "t0_safety",
+  "nodes": {
+    "t0_safety": {
+      "id": "t0_safety",
+      "type": "safetyCheck",
+      "headline": "Is the area safe?",
+      "checks": [
+        "No traffic",
+        "No electrical hazard",
+        "No fire or gas"
+      ],
+      "next": "t1",
+      "options": [
+        {
+          "label": "SAFE",
+          "next": "t1"
+        },
+        {
+          "label": "UNSAFE",
+          "next": "t_unsafe"
+        }
+      ]
+    },
+    "t1": {
+      "id": "t1",
+      "type": "question",
+      "headline": "Are they conscious?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "t2"
+        },
+        {
+          "label": "NO",
+          "next": "t_unconscious"
+        }
+      ]
+    },
+    "t2": {
+      "id": "t2",
+      "type": "question",
+      "headline": "Are they breathing normally?",
+      "instruction": "Gasping counts as NO.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES",
+          "next": "t3a"
+        },
+        {
+          "label": "NO / GASPING",
+          "next": "t_age_cpr"
+        }
+      ]
+    },
+    "t3a": {
+      "id": "t3a",
+      "type": "question",
+      "headline": "What best matches this?",
+      "displayMode": "iconGrid",
+      "options": [
+        {
+          "label": "Bleeding",
+          "next": "t_route_bleeding"
+        },
+        {
+          "label": "Choking",
+          "next": "t3_choking_age"
+        },
+        {
+          "label": "Chest Pain",
+          "next": "t_route_heart_attack"
+        },
+        {
+          "label": "Face / Speech / Arm",
+          "next": "t3_stroke_age"
+        },
+        {
+          "label": "Allergic Reaction",
+          "next": "t_route_anaphylaxis"
+        },
+        {
+          "label": "Not Sure",
+          "next": "t_not_sure"
+        },
+        {
+          "label": "OTHER EMERGENCY ↓",
+          "next": "t3b"
+        }
+      ]
+    },
+    "t3b": {
+      "id": "t3b",
+      "type": "question",
+      "headline": "Choose the closest emergency.",
+      "displayMode": "iconGrid",
+      "options": [
+        {
+          "label": "Seizure",
+          "next": "t_route_seizure"
+        },
+        {
+          "label": "Burns",
+          "next": "t_route_burns"
+        },
+        {
+          "label": "Fracture",
+          "next": "t_route_fracture"
+        },
+        {
+          "label": "Poisoning",
+          "next": "t_route_poisoning"
+        }
+      ]
+    },
+    "t_not_sure": {
+      "id": "t_not_sure",
+      "type": "notSure",
+      "headline": "Not sure what this is?",
+      "instruction": "Call emergency services now. If you need a fallback guide, open the protocol list without leaving triage.",
+      "generateReport": true,
+      "primaryAction": {
+        "label": "Call Emergency NOW",
+        "action": "CALL_EMERGENCY"
+      },
+      "secondaryAction": {
+        "label": "Open protocol list",
+        "action": "OPEN_PROTOCOL_LIST"
+      }
+    },
+    "t_unconscious": {
+      "id": "t_unconscious",
+      "type": "question",
+      "headline": "Are they breathing?",
+      "instruction": "If unsure, choose NO / NOT SURE.",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "YES BREATHING",
+          "next": "t_route_unconscious"
+        },
+        {
+          "label": "NO / NOT SURE",
+          "next": "t_age_cpr"
+        }
+      ]
+    },
+    "t_age_cpr": {
+      "id": "t_age_cpr",
+      "type": "question",
+      "headline": "How old are they?",
+      "instruction": "Age affects technique - this matters.",
+      "displayMode": "threeButton",
+      "options": [
+        {
+          "label": "Adult (12+)",
+          "next": "t_route_cpr_adult"
+        },
+        {
+          "label": "Child (1-11)",
+          "next": "t_route_cpr_child"
+        },
+        {
+          "label": "Infant (<1yr)",
+          "next": "t_route_cpr_infant"
+        }
+      ]
+    },
+    "t3_choking_age": {
+      "id": "t3_choking_age",
+      "type": "question",
+      "headline": "How old are they?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "Adult or Child (1+)",
+          "next": "t_route_choking_adult"
+        },
+        {
+          "label": "Infant (<1yr)",
+          "next": "t_route_choking_infant"
+        }
+      ]
+    },
+    "t3_stroke_age": {
+      "id": "t3_stroke_age",
+      "type": "question",
+      "headline": "How old are they?",
+      "displayMode": "twoButton",
+      "options": [
+        {
+          "label": "Adult (12+)",
+          "next": "t_route_stroke"
+        },
+        {
+          "label": "Child (<12)",
+          "next": "t3_child_neuro"
+        }
+      ]
+    },
+    "t3_child_neuro": {
+      "id": "t3_child_neuro",
+      "type": "question",
+      "headline": "Which sign fits best?",
+      "displayMode": "default",
+      "options": [
+        {
+          "label": "Face droop / weak arm / strange speech",
+          "next": "t_route_stroke"
+        },
+        {
+          "label": "Sudden headache / confusion / vision loss",
+          "next": "t3_child_neuro_call"
+        },
+        {
+          "label": "Shaking / jerking / uncontrolled movements",
+          "next": "t_route_seizure"
+        }
+      ]
+    },
+    "t3_child_neuro_call": {
+      "id": "t3_child_neuro_call",
+      "type": "terminal",
+      "headline": "Call EMS NOW.",
+      "instruction": "FAST is not validated for children. The dispatcher will guide you.",
+      "routesTo": null,
+      "generateReport": true
+    },
+    "t_unsafe": {
+      "id": "t_unsafe",
+      "type": "terminal",
+      "headline": "Get to safety first.",
+      "instruction": "Do not enter danger. Call emergency services when safe.",
+      "routesTo": null,
+      "generateReport": true
+    },
+    "t_route_bleeding": {
+      "id": "t_route_bleeding",
+      "type": "terminal",
+      "headline": "Opening bleeding protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "bleeding"
+    },
+    "t_route_heart_attack": {
+      "id": "t_route_heart_attack",
+      "type": "terminal",
+      "headline": "Opening heart attack protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "heart-attack"
+    },
+    "t_route_anaphylaxis": {
+      "id": "t_route_anaphylaxis",
+      "type": "terminal",
+      "headline": "Opening anaphylaxis protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "anaphylaxis"
+    },
+    "t_route_seizure": {
+      "id": "t_route_seizure",
+      "type": "terminal",
+      "headline": "Opening seizure protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "seizure"
+    },
+    "t_route_burns": {
+      "id": "t_route_burns",
+      "type": "terminal",
+      "headline": "Opening burns protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "burns"
+    },
+    "t_route_fracture": {
+      "id": "t_route_fracture",
+      "type": "terminal",
+      "headline": "Opening fracture protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "fracture"
+    },
+    "t_route_poisoning": {
+      "id": "t_route_poisoning",
+      "type": "terminal",
+      "headline": "Opening poisoning protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "poisoning"
+    },
+    "t_route_unconscious": {
+      "id": "t_route_unconscious",
+      "type": "terminal",
+      "headline": "Opening unconscious protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "unconscious"
+    },
+    "t_route_cpr_adult": {
+      "id": "t_route_cpr_adult",
+      "type": "terminal",
+      "headline": "Opening adult CPR protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "cpr-adult"
+    },
+    "t_route_cpr_child": {
+      "id": "t_route_cpr_child",
+      "type": "terminal",
+      "headline": "Opening child CPR protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "cpr-child"
+    },
+    "t_route_cpr_infant": {
+      "id": "t_route_cpr_infant",
+      "type": "terminal",
+      "headline": "Opening infant CPR protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "cpr-infant"
+    },
+    "t_route_choking_adult": {
+      "id": "t_route_choking_adult",
+      "type": "terminal",
+      "headline": "Opening choking protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "choking-adult"
+    },
+    "t_route_choking_infant": {
+      "id": "t_route_choking_infant",
+      "type": "terminal",
+      "headline": "Opening infant choking protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "choking-infant"
+    },
+    "t_route_stroke": {
+      "id": "t_route_stroke",
+      "type": "terminal",
+      "headline": "Opening stroke protocol.",
+      "instruction": "Routing now.",
+      "routesTo": "stroke"
+    }
+  }
+}

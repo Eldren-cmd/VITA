@@ -1,6 +1,14 @@
-import { FLOW_BODY_CLASS, FLOW_HEADLINE_CLASS, GLARE_CLASS, PRIMARY_BUTTON_CLASS } from '@/constants/design'
+import {
+  FLOW_BODY_CLASS,
+  FLOW_HEADLINE_CLASS,
+  GLARE_CLASS,
+  PRIMARY_BUTTON_CLASS,
+  SECONDARY_BUTTON_CLASS,
+} from '@/constants/design'
 
 export default function SafetyCheckStep({ node, onAdvance }) {
+  const options = node.options || [{ label: 'Area is safe' }]
+
   return (
     <section className="flex flex-1 flex-col justify-between gap-8">
       <div className="space-y-6">
@@ -33,9 +41,16 @@ export default function SafetyCheckStep({ node, onAdvance }) {
       </div>
 
       <div className="grid gap-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
-        <button type="button" className={PRIMARY_BUTTON_CLASS} onClick={() => onAdvance(0)}>
-          Area is safe
-        </button>
+        {options.map((option, index) => (
+          <button
+            key={option.label}
+            type="button"
+            className={index === 0 ? PRIMARY_BUTTON_CLASS : SECONDARY_BUTTON_CLASS}
+            onClick={() => onAdvance(index)}
+          >
+            {option.label}
+          </button>
+        ))}
       </div>
     </section>
   )
