@@ -43,6 +43,39 @@ async function updateStandardCache(request) {
   }
 }
 
+async function updateCriticalCache(request, cacheKey = request) {
+  const cache = await caches.open(CRITICAL_CACHE)
+
+  try {
+    const response = await fetch(request, { cache: 'no-store' })
+
+    if (response && response.ok) {
+      cache.put(cacheKey, response.clone())
+    }
+
+    return response
+  } catch (_error) {
+    return (await cache.match(cacheKey)) || cache.match(request)
+  }
+}
+
+async function handleNavigation(request, shellPath) {
+  const cache = await caches.open(CRITICAL_CACHE)
+
+  try {
+    const response = await fetch(request, { cache: 'no-store' })
+
+    if (response && response.ok) {
+      cache.put(request, response.clone())
+      cache.put(shellPath, response.clone())
+    }
+
+    return response
+  } catch (_error) {
+    return (await cache.match(request)) || cache.match(shellPath)
+  }
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     Promise.all([
@@ -73,35 +106,17 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (request.mode === 'navigate' && url.pathname === '/') {
-    event.respondWith(
-      caches.match('/').then((cachedShell) => cachedShell || fetch('/'))
-    )
+    event.respondWith(handleNavigation(request, '/'))
     return
   }
 
   if (request.mode === 'navigate' && url.pathname.startsWith('/app')) {
-    event.respondWith(
-      caches.match('/app').then((cachedShell) => cachedShell || fetch('/app'))
-    )
+    event.respondWith(handleNavigation(request, '/app'))
     return
   }
 
   if (CRITICAL.includes(url.pathname)) {
-    event.respondWith(
-      caches.match(request).then((cachedResponse) => {
-        return (
-          cachedResponse ||
-          fetch(request).then((networkResponse) => {
-            if (networkResponse && networkResponse.ok) {
-              const responseClone = networkResponse.clone()
-              caches.open(CRITICAL_CACHE).then((cache) => cache.put(request, responseClone))
-            }
-
-            return networkResponse
-          })
-        )
-      })
-    )
+    event.respondWith(updateCriticalCache(request))
     return
   }
 
