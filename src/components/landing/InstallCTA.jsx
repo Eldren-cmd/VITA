@@ -1,6 +1,4 @@
-import Link from 'next/link'
-
-import { PRIMARY_BUTTON_CLASS } from '@/constants/design'
+import InstallPromptCard from '@/components/onboarding/InstallPromptCard'
 
 export default function InstallCTA() {
   return (
@@ -12,12 +10,10 @@ export default function InstallCTA() {
             Put VITA on the phone you actually carry.
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-white/85">
-            Open the app, then use your browser&apos;s install or Add to Home Screen action so the emergency flow is already one tap away.
+            Install VITA directly when the browser supports it, or follow the built-in home-screen steps for your device.
           </p>
-          <div className="mt-8 flex justify-center">
-            <Link href="/app" className={`${PRIMARY_BUTTON_CLASS} max-w-[260px] bg-black/20`}>
-              Open App
-            </Link>
+          <div className="mt-8">
+            <InstallPromptCard />
           </div>
         </div>
       </div>
