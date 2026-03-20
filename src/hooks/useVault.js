@@ -1,23 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-const STORAGE_KEY = 'VITA_VAULT'
+import VaultEngine from '@/engine/VaultEngine'
 
 const DEFAULT_VAULT = {
   profile: {
-    name: '',
-    dob: '',
-    bloodType: '',
-    organDonor: false,
+    name: null,
+    dob: null,
+    bloodType: null,
+    organDonor: null,
     allergies: [],
     conditions: [],
     medications: [],
   },
   contacts: [],
   settings: {
-    mode: 'live',
+    mode: 'dark',
     voiceEnabled: true,
     language: 'en',
-    country: 'UNKNOWN',
+    country: 'NG',
     dir: 'ltr',
   },
   incidents: [],
@@ -25,96 +25,59 @@ const DEFAULT_VAULT = {
   disclaimerDate: null,
 }
 
-function readVault() {
-  if (typeof window === 'undefined') {
-    return DEFAULT_VAULT
-  }
-
-  try {
-    const storedValue = window.localStorage.getItem(STORAGE_KEY)
-
-    if (!storedValue) {
-      return DEFAULT_VAULT
-    }
-
-    return {
-      ...DEFAULT_VAULT,
-      ...JSON.parse(storedValue),
-    }
-  } catch (_error) {
-    return DEFAULT_VAULT
-  }
-}
-
 export default function useVault() {
+  const engineRef = useRef(null)
   const [vault, setVault] = useState(DEFAULT_VAULT)
 
   useEffect(() => {
-    setVault(readVault())
-  }, [])
-
-  const persistVault = (nextVault) => {
-    setVault(nextVault)
-
     if (typeof window === 'undefined') {
       return
     }
 
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextVault))
-    } catch (_error) {
-      // Silent fail by contract.
+    engineRef.current = new VaultEngine()
+    setVault(engineRef.current.getVault())
+  }, [])
+
+  const syncVault = () => {
+    if (!engineRef.current) {
+      setVault(DEFAULT_VAULT)
+      return DEFAULT_VAULT
     }
+
+    const nextVault = engineRef.current.getVault()
+    setVault(nextVault)
+    return nextVault
   }
 
   const updateProfile = (nextProfile) => {
-    persistVault({
-      ...vault,
-      profile: {
-        ...vault.profile,
-        ...nextProfile,
-      },
-    })
+    engineRef.current?.updateProfile(nextProfile)
+    syncVault()
   }
 
   const updateContacts = (nextContacts) => {
-    persistVault({
-      ...vault,
-      contacts: nextContacts,
-    })
-  }
-
-  const updateSettings = (nextSettings) => {
-    persistVault({
-      ...vault,
-      settings: {
-        ...vault.settings,
-        ...nextSettings,
-      },
-    })
-  }
-
-  const clearAllData = () => {
-    if (typeof window === 'undefined') {
+    if (!engineRef.current) {
       return
     }
 
-    try {
-      // VITA_VAULT uses uppercase - JavaScript's startsWith() is
-      // case-sensitive. "VITA_VAULT".startsWith("vita_") returns false.
-      // Explicit removal is required to actually delete user health data.
-      window.localStorage.removeItem('VITA_VAULT')
+    engineRef.current.getContacts().forEach((contact) => {
+      engineRef.current.removeContact(contact.id)
+    })
 
-      const SYSTEM_KEYS = ['vita_pending_critical_update']
+    nextContacts.forEach((contact) => {
+      engineRef.current.addContact(contact)
+    })
 
-      Object.keys(window.localStorage)
-        .filter((key) => key.startsWith('vita_') && !SYSTEM_KEYS.includes(key))
-        .forEach((key) => window.localStorage.removeItem(key))
-    } catch (_error) {
-      // Silent fail by contract.
-    }
+    syncVault()
+  }
 
-    setVault(DEFAULT_VAULT)
+  const updateSettings = (nextSettings) => {
+    engineRef.current?.updateSettings(nextSettings)
+    syncVault()
+  }
+
+  const clearAllData = () => {
+    engineRef.current?.clearAllData()
+    syncVault()
   }
 
   return {

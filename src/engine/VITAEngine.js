@@ -71,6 +71,8 @@ class VITAEngine {
       this.history.push({
         type: 'NAVIGATE',
         nodeId: this.currentNodeId,
+        nodeType: currentNode.type,
+        headline: currentNode.headline,
         optionIndex,
         timestamp: Date.now(),
         synthetic: true,
@@ -84,6 +86,8 @@ class VITAEngine {
     this.history.push({
       type: 'NAVIGATE',
       nodeId: this.currentNodeId,
+      nodeType: currentNode.type,
+      headline: currentNode.headline,
       optionIndex,
       timestamp: Date.now(),
     })
@@ -159,17 +163,25 @@ class VITAEngine {
   }
 
   getReport() {
+    const exitNode = this.getCurrentNode()
+
     return {
       protocolId: this.protocol.id,
+      protocolLabel: this.protocol.label || this.protocol.id,
       version: this.protocol.version,
+      protocolVersion: this.protocol.version,
       source: {
         doi: this.protocol.source?.doi || null,
       },
+      sourceDoi: this.protocol.source?.doi || null,
       startTime: this.startTime,
+      endTime: Date.now(),
       duration: Date.now() - this.startTime,
       callMethod: this.callMethod,
+      history: this.history,
       steps: this.history,
       finalSeverity: this.currentSeverity,
+      exitNode,
     }
   }
 

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { FLOW_BODY_CLASS, FLOW_HEADLINE_CLASS, PRIMARY_BUTTON_CLASS, SECONDARY_BUTTON_CLASS } from '@/constants/design'
+import ReportEngine from '@/engine/ReportEngine'
+import VaultEngine from '@/engine/VaultEngine'
 
 export default function TerminalStep({ node, getReport, onTerminate }) {
   const [showRefreshDialog, setShowRefreshDialog] = useState(false)
@@ -13,7 +15,21 @@ export default function TerminalStep({ node, getReport, onTerminate }) {
     }
 
     mountedRef.current = true
-    setReport(getReport?.() || null)
+
+    try {
+      const session = getReport?.() || null
+
+      if (session) {
+        const incidentReport = ReportEngine.generate(session)
+        const vault = new VaultEngine()
+
+        vault.addIncident(incidentReport)
+        setReport(incidentReport)
+      }
+    } catch (_error) {
+      setReport(getReport?.() || null)
+    }
+
     onTerminate?.()
 
     const timerId = window.setTimeout(() => {
