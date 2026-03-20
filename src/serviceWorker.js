@@ -1,4 +1,4 @@
-const CURRENT_VERSION = '0.1.0'
+const CURRENT_VERSION = '__APP_VERSION__'
 const CRITICAL_CACHE = `vita-critical-${CURRENT_VERSION}`
 const STANDARD_CACHE = `vita-standard-${CURRENT_VERSION}`
 

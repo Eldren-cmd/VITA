@@ -1,6 +1,6 @@
 {
   "name": "vita",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "prepare:public": "node scripts/syncPublicAssets.js",

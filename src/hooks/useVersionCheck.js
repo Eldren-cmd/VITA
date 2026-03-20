@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const CURRENT_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || '0.1.0'
+const CURRENT_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || '0.1.1'
 
 function buildPendingUpdate(version, criticalUpdate) {
   return JSON.stringify({

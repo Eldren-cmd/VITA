@@ -42,7 +42,10 @@ export default function App({ Component, pageProps }: AppProps) {
       return
     }
 
-    navigator.serviceWorker.register('/service-worker.js').catch(() => {})
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((registration) => registration.update().catch(() => {}))
+      .catch(() => {})
   }, [])
 
   const handleAcceptDisclaimer = () => {
